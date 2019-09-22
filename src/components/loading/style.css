@@ -1,0 +1,27 @@
+@keyframes loading-icon {
+    0% {
+        transform: scale(.6) rotate(0);
+    }
+    50% {
+        transform: scale(1) rotate(360deg);
+    }
+    100% {
+        transform: scale(.6) rotate(360deg);
+    }
+}
+
+.loading-icon {
+    width: 20rem;
+    height: 20rem;
+    animation: loading-icon 1.5s ease infinite;
+}
+
+.loading-icon.small {
+    width: 10rem;
+    height: 10rem;
+}
+
+.loading-icon.big {
+    width: 29.4rem;
+    height: 29.4rem;
+}

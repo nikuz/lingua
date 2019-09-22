@@ -1,0 +1,222 @@
+// @flow
+
+import * as React from 'react';
+import ReactDOM from 'react-dom';
+import classNames from 'classnames';
+import Icon from '../icon';
+import Loading from '../loading';
+import {
+    ButtonOrange,
+    ButtonTransparent,
+} from '../button';
+import './style.css';
+
+type Props = {
+    className?: string | { [className: string]: * },
+    contentClassName?: string | { [className: string]: * },
+    blockerClassName?: string | { [className: string]: * },
+    message?: string,
+    children?: React.Node,
+    autoHideTime?: number,
+    withCloseButton?: boolean,
+    icon?: string, //eslint-disable-line
+    iconClassName?: string, //eslint-disable-line
+    acceptText?: string, //eslint-disable-line
+    cancelText?: string, //eslint-disable-line
+    onAcceptButtonDisabled?: boolean, //eslint-disable-line
+    onAcceptClick?: () => *, //eslint-disable-line
+    autoHideCallback?: () => *,
+    onClick?: () => *,
+    onClose?: () => *,
+    onCancelClick?: () => *,
+};
+
+export default class Overlay extends React.PureComponent<Props> {
+    static defaultProps = {
+        withCloseButton: false,
+    };
+
+    timer: TimeoutID;
+
+    componentDidMount() {
+        const {
+            autoHideTime,
+            autoHideCallback,
+        } = this.props;
+
+        if (autoHideTime && autoHideCallback) {
+            this.timer = setTimeout(autoHideCallback, autoHideTime);
+        }
+    }
+
+    containerClickHandler = () => {
+        const {
+            onClick,
+            onCancelClick,
+            autoHideCallback,
+        } = this.props;
+        const clickHandler = onClick || autoHideCallback || onCancelClick;
+
+        if (clickHandler instanceof Function) {
+            clickHandler();
+        }
+    };
+
+    componentWillUnmount() {
+        const { onClose } = this.props;
+        if (this.timer) {
+            clearTimeout(this.timer);
+        }
+        if (onClose instanceof Function) {
+            onClose();
+        }
+    }
+
+    render() {
+        const body = document.body;
+        if (!body) {
+            return null;
+        }
+        const { children } = this.props;
+        const { withCloseButton } = this.props;
+        let {
+            className,
+            contentClassName,
+            blockerClassName,
+            message,
+        } = this.props;
+
+        className = classNames(
+            'overlay',
+            className
+        );
+        contentClassName = classNames(
+            'overlay-content',
+            withCloseButton && 'relative',
+            contentClassName
+        );
+        blockerClassName = classNames(
+            'blocker',
+            blockerClassName
+        );
+        if (children) {
+            message = children;
+        }
+
+        return ReactDOM.createPortal(
+            (
+                <div className="overlay-container">
+                    <div className={className}>
+                        <div onClick={this.containerClickHandler}>
+                            <div className={blockerClassName} />
+                        </div>
+                        <div className={contentClassName}>
+                            { withCloseButton && (
+                                <ButtonTransparent
+                                    className="overlay-close-button"
+                                    leftIcon="close"
+                                    onClick={this.containerClickHandler}
+                                />
+                            ) }
+                            { message }
+                        </div>
+                    </div>
+                </div>
+            ),
+            body
+        );
+    }
+}
+
+export const OverlayMessage = (props: Props) => {
+    const extendedProps: Props = {
+        ...props,
+        className: 'overlay-message no-blur',
+        contentClassName: 'overlay-message-content',
+    };
+
+    return <Overlay {...extendedProps} />;
+};
+
+export const OverlayError = (props: Props) => {
+    const { children } = props;
+    let { message } = props;
+    if (children) {
+        message = children;
+    }
+    const extendedProps: Props = {
+        ...props,
+        className: 'overlay-error no-blur',
+        contentClassName: 'overlay-error-content',
+    };
+
+    return (
+        <Overlay {...extendedProps}>
+            <div>
+                <Icon src="error" className="overlay-error-icon" />
+                <p className="overlay-error-text">
+                    { message }
+                </p>
+                <ButtonOrange
+                    text="Overlay.Button.Ok"
+                    className="overlay-error-btn"
+                    onClick={props.onClick || props.autoHideCallback}
+                />
+            </div>
+        </Overlay>
+    );
+};
+
+export const OverlayLoading = (props: Props) => {
+    const extendedProps: Props = {
+        ...props,
+        className: 'overlay-loading no-blur',
+        contentClassName: 'overlay-loading-content',
+    };
+
+    return (
+        <Overlay {...extendedProps}>
+            <Loading size="big" />
+        </Overlay>
+    );
+};
+
+export const OverlayConfirm = (props: Props) => {
+    const extendedProps: Props = {
+        ...props,
+        className: 'overlay-confirm no-blur',
+        contentClassName: 'overlay-confirm-content',
+    };
+
+    return (
+        <Overlay {...extendedProps}>
+            {props.icon && (
+                <div className="overlay-confirm-icon-wrapper">
+                    <Icon
+                        src={props.icon}
+                        className={
+                            classNames('overlay-confirm-icon', props.iconClassName)
+                        }
+                    />
+                </div>
+            )}
+            {props.message && (
+                <p className="overlay-confirm-text">
+                    {props.message}
+                </p>
+            )}
+            {props.children}
+            <ButtonOrange
+                text={props.acceptText}
+                className="form-submit-button"
+                disabled={props.onAcceptButtonDisabled || false}
+                onClick={props.onAcceptClick}
+            />
+            <ButtonTransparent
+                text={props.cancelText}
+                className="form-submit-button overlay-confirm-cancel-btn"
+                onClick={props.onCancelClick}
+            />
+        </Overlay>
+    );
+};

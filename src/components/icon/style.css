@@ -1,0 +1,40 @@
+
+use {
+    fill: currentColor;
+    stroke: currentColor;
+}
+
+.white > use {
+    fill: var(--white);
+    stroke: var(--white);
+}
+
+.blue > use {
+    stroke: var(--text-color);
+    fill: var(--text-color);
+}
+
+.sand > use {
+    stroke: var(--sand-light-3);
+    fill: var(--sand-light-3);
+}
+
+.gray > use {
+    stroke: var(--text-color-dark);
+    fill: var(--text-color-dark);
+}
+
+.green > use {
+    stroke: var(--green-light-2);
+    fill: var(--green-light-2);
+}
+
+.orange > use {
+    stroke: var(--sand-light-2);
+    fill: var(--sand-light-2);
+}
+
+.red > use {
+    stroke: var(--red-light-2);
+    fill: var(--red-light-2);
+}
