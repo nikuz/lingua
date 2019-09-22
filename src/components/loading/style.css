@@ -11,17 +11,17 @@
 }
 
 .loading-icon {
-    width: 20rem;
-    height: 20rem;
+    width: 20vmax;
+    height: 20vmax;
     animation: loading-icon 1.5s ease infinite;
 }
 
 .loading-icon.small {
-    width: 10rem;
-    height: 10rem;
+    width: 10vmax;
+    height: 10vmax;
 }
 
 .loading-icon.big {
-    width: 29.4rem;
-    height: 29.4rem;
+    width: 29.4vmax;
+    height: 29.4vmax;
 }

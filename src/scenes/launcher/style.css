@@ -11,8 +11,8 @@
 
 #launcher-loading-text {
     position: absolute;
-    left: -100rem;
-    top: -100rem;
+    left: -100vmax;
+    top: -100vmax;
 }
 
 #launcher-loading-text .thin {

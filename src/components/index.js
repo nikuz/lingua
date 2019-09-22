@@ -1,6 +1,5 @@
 // @flow
 
-import ResizableContainer from './resizable-container';
 import Button, {
     ButtonRed,
     ButtonBlue,
@@ -21,7 +20,6 @@ import Loading from './loading';
 import TextField from './text-field';
 
 export {
-    ResizableContainer,
     Button,
     ButtonRed,
     ButtonBlue,

@@ -9,7 +9,7 @@
     "create-stub": "flow-typed create-stub react-redux connected-react-router",
     "start": "NODE_ENV=development webpack-dev-server",
     "prebuild": "npm run flow && npm run eslint",
-    "build": "NODE_ENV=production webpack",
+    "build": "NODE_ENV=production webpack && cp dst/* ../lingua-backend/public/",
     "flow": "flow check",
     "eslint": "eslint ./webpack.config.js ./src -f table"
   },
