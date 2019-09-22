@@ -8,14 +8,14 @@ import {
 } from '../../components';
 import type {
     ErrorObject,
-    // TranslationResponse,
+    TranslationResponse,
     FormFieldString,
 } from '../../types';
 import './style.css';
 
 type Props = {
     translationGetLoading: boolean,
-    // translation: TranslationResponse,
+    translation: TranslationResponse,
     translationGetError: ErrorObject,
     searchField: FormFieldString,
     translationGet: (word: string) => *,
@@ -28,13 +28,17 @@ export default class Home extends React.Component<Props> {
         this.props.translationGet(searchField.value);
     };
 
+    renderTranslation = () => {
+        const { translation } = this.props;
+        console.log(translation);
+        return null;
+    };
+
     renderForm = () => {
         const {
             translationGetLoading,
-            translationGetError,
             searchField,
         } = this.props;
-        const error = translationGetError;
         const isSubmitDisabled = !searchField.value.length || translationGetLoading;
 
         return (
@@ -47,34 +51,35 @@ export default class Home extends React.Component<Props> {
                         className="sf-input"
                     />
                 </div>
-                <div className="sf-submit-wrapper">
-                    <ButtonGreen
-                        disabled={isSubmitDisabled}
-                        className="sf-submit"
-                        onClick={this.searchHandler}
-                    >
-                        Translate
-                    </ButtonGreen>
-                    { translationGetLoading && (
-                        <Loading
-                            size="small"
-                            className="sf-loading"
-                        />
-                    ) }
-                </div>
-                {error && (
-                    <div>
-                        {error.message}
+                <ButtonGreen
+                    disabled={isSubmitDisabled}
+                    className="sf-submit"
+                    onClick={this.searchHandler}
+                >
+                    Translate
+                </ButtonGreen>
+                { translationGetLoading && (
+                    <div className="sf-loading">
+                        <Loading size="small" />
                     </div>
-                )}
+                ) }
             </div>
         );
     };
 
     render() {
+        const { translationGetError } = this.props;
+        const error = translationGetError;
+
         return (
             <div className="home-container">
                 {this.renderForm()}
+                {this.renderTranslation()}
+                {error && (
+                    <div>
+                        {error.message}
+                    </div>
+                )}
             </div>
         );
     }
