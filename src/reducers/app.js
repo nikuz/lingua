@@ -1,13 +1,13 @@
 // @flow
 import {
-    GET_API_IP_REQUEST,
-    GET_API_IP_SUCCESS,
-    GET_API_IP_FAILURE,
+    APP_GET_API_IP_REQUEST,
+    APP_GET_API_IP_SUCCESS,
+    APP_GET_API_IP_FAILURE,
 } from '../types/actions/app';
 import type {
-    SetApiIPRequestAction,
-    SetApiIPSuccessAction,
-    SetApiIPFailureAction,
+    GetApiIPRequestAction,
+    GetApiIPSuccessAction,
+    GetApiIPFailureAction,
     ErrorObject,
 } from '../types';
 
@@ -24,29 +24,30 @@ const initialState: AppReducerState = {
 };
 
 type Action =
-    SetApiIPRequestAction
-    | SetApiIPSuccessAction
-    | SetApiIPFailureAction;
+    GetApiIPRequestAction
+    | GetApiIPSuccessAction
+    | GetApiIPFailureAction;
 
-export default function appState(
+export default function appReducer(
     state: AppReducerState = initialState,
     action: Action
 ): AppReducerState {
     switch (action.type) {
-        case GET_API_IP_REQUEST:
+        case APP_GET_API_IP_REQUEST:
             return {
                 ...state,
                 apiIPLoading: true,
+                apiIPError: null,
             };
 
-        case GET_API_IP_SUCCESS:
+        case APP_GET_API_IP_SUCCESS:
             return {
                 ...state,
                 apiIPLoading: false,
                 apiIP: process.env.NODE_ENV !== 'production' ? 'localhost' : action.payload,
             };
 
-        case GET_API_IP_FAILURE:
+        case APP_GET_API_IP_FAILURE:
             return {
                 ...state,
                 apiIPLoading: false,

@@ -6,18 +6,18 @@ import {
     request,
 } from '../utils';
 import {
-    GET_API_IP_REQUEST,
-    GET_API_IP_SUCCESS,
-    GET_API_IP_FAILURE,
+    APP_GET_API_IP_REQUEST,
+    APP_GET_API_IP_SUCCESS,
+    APP_GET_API_IP_FAILURE,
 } from '../types/actions/app';
 import { apiIPGetterURL } from '../constants/app';
 
 export const getApiIP = () => (dispatch: DispatchAPI<*>) => (
     actionCreator({
         dispatch,
-        requestAction: GET_API_IP_REQUEST,
-        failureAction: GET_API_IP_FAILURE,
-        successAction: GET_API_IP_SUCCESS,
+        requestAction: APP_GET_API_IP_REQUEST,
+        successAction: APP_GET_API_IP_SUCCESS,
+        failureAction: APP_GET_API_IP_FAILURE,
         action: () => request.get({
             url: apiIPGetterURL,
         }),

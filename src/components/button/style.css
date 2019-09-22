@@ -3,11 +3,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    min-height: 5rem;
+    min-height: 5.8rem;
     padding: 0 2rem;
     background-color: var(--white);
     color: var(--text-color);
-    border-radius: 10rem;
+    border-radius: 1rem;
     font-size: 2rem;
     font-weight: bold;
     cursor: pointer;

@@ -1,7 +1,10 @@
 // @flow
 
 import * as React from 'react';
-import { Loading } from '../../components';
+import {
+    ResizableContainer,
+    Loading,
+} from '../../components';
 import type { ErrorObject } from '../../types';
 import './style.css';
 
@@ -25,7 +28,7 @@ export default class Launcher extends React.PureComponent<Props> {
 
         if (apiIPLoading) {
             return (
-                <div id="launcher">
+                <ResizableContainer id="launcher" data-id="launcher">
                     <div id="launcher-loading">
                         <Loading />
                         <div id="launcher-loading-text">
@@ -34,22 +37,22 @@ export default class Launcher extends React.PureComponent<Props> {
                             <span className="bold">Bold</span>
                         </div>
                     </div>
-                </div>
+                </ResizableContainer>
             );
         }
 
         if (apiIPError) {
             return (
-                <div id="launcher">
+                <ResizableContainer id="launcher" data-id="launcher">
                     {apiIPError.message}
-                </div>
+                </ResizableContainer>
             );
         }
 
         return (
-            <div id="launcher">
+            <ResizableContainer id="launcher" data-id="launcher">
                 {this.props.children}
-            </div>
+            </ResizableContainer>
         );
     }
 }

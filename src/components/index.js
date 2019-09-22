@@ -1,5 +1,6 @@
 // @flow
 
+import ResizableContainer from './resizable-container';
 import Button, {
     ButtonRed,
     ButtonBlue,
@@ -17,8 +18,10 @@ import Overlay, {
     OverlayConfirm,
 } from './overlay';
 import Loading from './loading';
+import TextField from './text-field';
 
 export {
+    ResizableContainer,
     Button,
     ButtonRed,
     ButtonBlue,
@@ -34,4 +37,5 @@ export {
     OverlayLoading,
     OverlayConfirm,
     Loading,
+    TextField,
 };
