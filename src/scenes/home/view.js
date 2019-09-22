@@ -50,6 +50,11 @@ export default class Home extends React.Component<Props> {
                         value={searchField.value}
                         className="sf-input"
                     />
+                    { translationGetLoading && (
+                        <div className="sf-loading">
+                            <Loading size="small" />
+                        </div>
+                    ) }
                 </div>
                 <ButtonGreen
                     disabled={isSubmitDisabled}
@@ -58,11 +63,6 @@ export default class Home extends React.Component<Props> {
                 >
                     Translate
                 </ButtonGreen>
-                { translationGetLoading && (
-                    <div className="sf-loading">
-                        <Loading size="small" />
-                    </div>
-                ) }
             </div>
         );
     };

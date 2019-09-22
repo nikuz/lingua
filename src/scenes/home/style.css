@@ -3,7 +3,6 @@
 }
 
 .search-form {
-    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -12,6 +11,7 @@
 }
 
 .sf-input-wrapper {
+    position: relative;
     flex: 1;
 }
 
@@ -25,7 +25,7 @@
 
 .sf-loading {
     position: absolute;
-    top: 0;
-    left: 100%;
-    transform: translate(20%, -20%);
+    top: 50%;
+    right: 1vmax;
+    transform: translateY(-47%);
 }
