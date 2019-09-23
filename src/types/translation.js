@@ -5,7 +5,7 @@ export type TranslationResponse = {
     word: string,
     translation?: string,
     pronunciation: string,
-    raw: [],
+    raw: Array<any>,
     image?: string,
     created_at?: string,
 };

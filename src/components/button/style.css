@@ -24,7 +24,8 @@
 
 .button.round {
     padding: 0;
-    width: 5vmax;
+    width: 5.8vmax;
+    border-radius: 5vmax;
     justify-content: center;
 }
 

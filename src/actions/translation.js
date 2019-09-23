@@ -10,6 +10,7 @@ import {
     TRANSLATION_REQUEST,
     TRANSLATION_SUCCESS,
     TRANSLATION_FAILURE,
+    TRANSLATION_CLEAR_STATE,
 } from '../types/actions/translation';
 import type { StoreState } from '../store/type';
 import type {
@@ -31,3 +32,7 @@ export const get = (word: string) => (
         }),
     });
 };
+
+export const clearState = () => ({
+    type: TRANSLATION_CLEAR_STATE,
+});

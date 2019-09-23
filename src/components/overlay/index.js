@@ -11,6 +11,8 @@ import {
 } from '../button';
 import './style.css';
 
+const WITH_OVERLAY_CLASSNAME = 'with-overlay';
+
 type Props = {
     className?: string | { [className: string]: * },
     contentClassName?: string | { [className: string]: * },
@@ -19,6 +21,7 @@ type Props = {
     children?: React.Node,
     autoHideTime?: number,
     withCloseButton?: boolean,
+    closeIconClassName?: string | { [className: string]: * },
     icon?: string, //eslint-disable-line
     iconClassName?: string, //eslint-disable-line
     acceptText?: string, //eslint-disable-line
@@ -47,6 +50,11 @@ export default class Overlay extends React.PureComponent<Props> {
         if (autoHideTime && autoHideCallback) {
             this.timer = setTimeout(autoHideCallback, autoHideTime);
         }
+
+        const documentElement = document.documentElement;
+        if (documentElement) {
+            documentElement.classList.add(WITH_OVERLAY_CLASSNAME);
+        }
     }
 
     containerClickHandler = () => {
@@ -67,6 +75,12 @@ export default class Overlay extends React.PureComponent<Props> {
         if (this.timer) {
             clearTimeout(this.timer);
         }
+
+        const documentElement = document.documentElement;
+        if (documentElement) {
+            documentElement.classList.remove(WITH_OVERLAY_CLASSNAME);
+        }
+
         if (onClose instanceof Function) {
             onClose();
         }
@@ -84,6 +98,7 @@ export default class Overlay extends React.PureComponent<Props> {
             contentClassName,
             blockerClassName,
             message,
+            closeIconClassName,
         } = this.props;
 
         className = classNames(
@@ -99,6 +114,10 @@ export default class Overlay extends React.PureComponent<Props> {
             'blocker',
             blockerClassName
         );
+        closeIconClassName = classNames(
+            'overlay-close-button-icon',
+            closeIconClassName
+        );
         if (children) {
             message = children;
         }
@@ -107,14 +126,13 @@ export default class Overlay extends React.PureComponent<Props> {
             (
                 <div className="overlay-container">
                     <div className={className}>
-                        <div onClick={this.containerClickHandler}>
-                            <div className={blockerClassName} />
-                        </div>
+                        <div onClick={this.containerClickHandler} className={blockerClassName} />
                         <div className={contentClassName}>
                             { withCloseButton && (
                                 <ButtonTransparent
                                     className="overlay-close-button"
                                     leftIcon="close"
+                                    leftIconClassName={closeIconClassName}
                                     onClick={this.containerClickHandler}
                                 />
                             ) }
@@ -153,12 +171,12 @@ export const OverlayError = (props: Props) => {
     return (
         <Overlay {...extendedProps}>
             <div>
-                <Icon src="error" className="overlay-error-icon" />
+                <Icon src="warning" className="overlay-error-icon" />
                 <p className="overlay-error-text">
                     { message }
                 </p>
                 <ButtonOrange
-                    text="Overlay.Button.Ok"
+                    text="Ok"
                     className="overlay-error-btn"
                     onClick={props.onClick || props.autoHideCallback}
                 />

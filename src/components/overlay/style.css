@@ -1,5 +1,13 @@
+html.with-overlay {
+    overflow: hidden;
+}
 
 .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -11,12 +19,7 @@
 }
 
 .overlay-content {
-    width: 50%;
-    margin: 0 auto;
-    padding: 3vmax;
     background-color: var(--white);
-    box-shadow: 0 1.6vmax 3.2vmax rgba(0, 0, 0, .5);
-    border-radius: 5.9vmax;
     z-index: 11;
 }
 
@@ -29,6 +32,7 @@
 
 .overlay-message-content,
 .overlay-error-content {
+    margin: 0 auto;
     display: flex;
     width: 69.5vmax;
     padding: 2.5vmax 3vmax;
@@ -36,6 +40,8 @@
     justify-content: center;;
     text-align: center;
     font-size: 2.8vmax;
+    box-shadow: 0 1.6vmax 3.2vmax rgba(0, 0, 0, .5);
+    border-radius: 5.9vmax;
     color: var(--text-color-dark-2);
 }
 
@@ -101,6 +107,10 @@
     position: absolute;
     right: 0;
     top: 0;
-    padding: 2vmax !important;
     color: var(--text-color-dark-2);
+}
+
+.overlay-close-button-icon {
+    width: 3vmax;
+    height: 3vmax;
 }

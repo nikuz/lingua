@@ -3,11 +3,13 @@ import {
     TRANSLATION_REQUEST,
     TRANSLATION_SUCCESS,
     TRANSLATION_FAILURE,
+    TRANSLATION_CLEAR_STATE,
 } from '../types/actions/translation';
 import type {
     TranslationRequestAction,
     TranslationSuccessAction,
     TranslationFailureAction,
+    TranslationClearStateAction,
     ErrorObject,
     TranslationResponse,
 } from '../types';
@@ -27,7 +29,8 @@ const initialState: TranslationReducerState = {
 type Action =
     TranslationRequestAction
     | TranslationSuccessAction
-    | TranslationFailureAction;
+    | TranslationFailureAction
+    | TranslationClearStateAction;
 
 export default function translationReducer(
     state: TranslationReducerState = initialState,
@@ -38,6 +41,7 @@ export default function translationReducer(
             return {
                 ...state,
                 getLoading: true,
+                translation: null,
                 getError: null,
             };
 
@@ -53,6 +57,12 @@ export default function translationReducer(
                 ...state,
                 getLoading: false,
                 getError: action.payload,
+            };
+
+        case TRANSLATION_CLEAR_STATE:
+            return {
+                ...state,
+                translation: null,
             };
 
         default:

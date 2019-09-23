@@ -131,15 +131,6 @@ class TextField extends React.Component<Props> {
             return;
         }
 
-        if (type === 'text' && typeof value === 'string') {
-            value = value
-                .split(' ')
-                .map((item) => (
-                    item.substr(0, 1).toUpperCase() + item.substr(1)
-                ))
-                .join(' ');
-        }
-
         if (type === 'number') {
             value = value.replace(/[^0-9.]/g, '');
             if (value !== '' && value !== '.') {

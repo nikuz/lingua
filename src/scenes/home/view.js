@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import {
+    TranslationView,
     TextField,
     ButtonGreen,
     Loading,
@@ -26,12 +27,6 @@ export default class Home extends React.Component<Props> {
         const { searchField } = this.props;
 
         this.props.translationGet(searchField.value);
-    };
-
-    renderTranslation = () => {
-        const { translation } = this.props;
-        console.log(translation);
-        return null;
     };
 
     renderForm = () => {
@@ -68,13 +63,16 @@ export default class Home extends React.Component<Props> {
     };
 
     render() {
-        const { translationGetError } = this.props;
+        const {
+            translation,
+            translationGetError,
+        } = this.props;
         const error = translationGetError;
 
         return (
             <div className="home-container">
                 {this.renderForm()}
-                {this.renderTranslation()}
+                { translation && <TranslationView /> }
                 {error && (
                     <div>
                         {error.message}
