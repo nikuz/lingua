@@ -43,6 +43,7 @@ export default class Home extends React.Component<Props> {
                         type="text"
                         id={searchField.id}
                         value={searchField.value}
+                        spellcheck={false}
                         className="sf-input"
                     />
                     { translationGetLoading && (

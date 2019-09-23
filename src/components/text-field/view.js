@@ -27,6 +27,7 @@ type Props = {
     autoFocus?: boolean,
     maxLength?: number,
     passwordVisible?: boolean,
+    spellcheck?: boolean,
     onChange?: (e: TextFieldData) => *,
     onFocus?: (e: Event) => *,
     onBlur?: (e: Event) => *,
@@ -41,6 +42,7 @@ type Props = {
 class TextField extends React.Component<Props> {
     static defaultProps = {
         type: 'text',
+        spellcheck: true,
     };
 
     fieldEl: ?HTMLElement;
@@ -173,6 +175,7 @@ class TextField extends React.Component<Props> {
             min,
             max,
             placeholder,
+            spellcheck,
         } = this.props;
         let {
             value,
@@ -213,6 +216,9 @@ class TextField extends React.Component<Props> {
                         min={min}
                         max={max}
                         autoComplete="new-password"
+                        spellCheck={spellcheck}
+                        autoCapitalize={spellcheck === false ? 'none' : 'true'}
+                        autoCorrect={spellcheck === false ? 'off' : 'on'}
                         placeholder={placeholder}
                         onFocus={this.onFocusHandler}
                         onBlur={this.onBlurHandler}

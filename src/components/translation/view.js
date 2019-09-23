@@ -13,6 +13,7 @@ const SHOW_MIN_DEFINITIONS = 1;
 const SHOW_MIN_EXAMPLES = 1;
 
 type Props = {
+    apiUrl: string,
     translation: TranslationResponse,
     clear: () => *,
 };
@@ -69,15 +70,21 @@ export default class TranslationView extends React.Component<Props, State> {
         this.state = newState;
     }
 
-    pronunciationEl: ?HTMLAudioElement;
+    componentDidMount() {
+        this.playPronunciation();
+    }
 
     selectMainTranslationWord = (word: string) => {
         console.log(word);
     };
 
     playPronunciation = () => {
-        if (this.pronunciationEl) {
-            this.pronunciationEl.play();
+        const { apiUrl } = this.props;
+        const { pronunciation } = this.state;
+        if (pronunciation) {
+            const audioUrl = `${apiUrl}${pronunciation}`;
+            const pronunciationAudio = new Audio(audioUrl);
+            pronunciationAudio.play();
         }
     };
 
@@ -440,12 +447,6 @@ export default class TranslationView extends React.Component<Props, State> {
                         </div>
                         { pronunciation && (
                             <div className="tho-pronunciation">
-                                <audio
-                                    ref={(el) => this.pronunciationEl = el}
-                                    src={pronunciation}
-                                    autoPlay
-                                    crossOrigin="anonymous"
-                                />
                                 <Button
                                     leftIcon="speaker"
                                     leftIconClassName="tho-pronunciation-icon"
