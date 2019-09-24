@@ -6,3 +6,6 @@ import './speaker.svg';
 import './quote.svg';
 import './close.svg';
 import './warning.svg';
+import './stop.svg';
+import './save.svg';
+import './broken-image.svg';

@@ -11,7 +11,6 @@ if (process.env.NODE_ENV === 'production') {
 }
 let devtool = 'eval-source-map';
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-// const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 
 const appDirectory = fs.realpathSync(process.cwd());
 const dstPath = path.resolve(appDirectory, './dst');
@@ -30,10 +29,11 @@ const plugins = [
         rootPath: '/',
         inject: false,
     }),
-    // new SpriteLoaderPlugin(),
-    new webpack.EnvironmentPlugin([
-        'NODE_ENV',
-    ]),
+    new webpack.EnvironmentPlugin({
+        'NODE_ENV': process.env.NODE_ENV,
+        API_GETTER_URL: process.env.LINGUA_API_GETTER_URL,
+        API_KEY: process.env.LINGUA_API_KEY,
+    }),
 ];
 
 let cacheDirectory = true;

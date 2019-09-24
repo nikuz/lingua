@@ -8,8 +8,6 @@ import View from './view';
 
 const mapStateToProps = (state: StoreState) => ({
     translationGetLoading: state.translation.getLoading,
-    translation: state.translation.translation,
-    translationGetError: state.translation.getError,
     searchField: formSelectors.getFieldString(state, 'search'),
 });
 

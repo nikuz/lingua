@@ -34,7 +34,7 @@ html.with-overlay {
 .overlay-error-content {
     margin: 0 auto;
     display: flex;
-    width: 69.5vmax;
+    width: 60%;
     padding: 2.5vmax 3vmax;
     flex-direction: row;
     justify-content: center;;
@@ -107,7 +107,9 @@ html.with-overlay {
     position: absolute;
     right: 0;
     top: 0;
+    padding: 1vmax !important;
     color: var(--text-color-dark-2);
+    z-index: 10;
 }
 
 .overlay-close-button-icon {

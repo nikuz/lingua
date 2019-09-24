@@ -7,17 +7,11 @@ import {
     ButtonGreen,
     Loading,
 } from '../../components';
-import type {
-    ErrorObject,
-    TranslationResponse,
-    FormFieldString,
-} from '../../types';
+import type { FormFieldString } from '../../types';
 import './style.css';
 
 type Props = {
     translationGetLoading: boolean,
-    translation: TranslationResponse,
-    translationGetError: ErrorObject,
     searchField: FormFieldString,
     translationGet: (word: string) => *,
 };
@@ -55,30 +49,18 @@ export default class Home extends React.Component<Props> {
                 <ButtonGreen
                     disabled={isSubmitDisabled}
                     className="sf-submit"
+                    text="Translate"
                     onClick={this.searchHandler}
-                >
-                    Translate
-                </ButtonGreen>
+                />
             </div>
         );
     };
 
     render() {
-        const {
-            translation,
-            translationGetError,
-        } = this.props;
-        const error = translationGetError;
-
         return (
             <div className="home-container">
                 {this.renderForm()}
-                { translation && <TranslationView /> }
-                {error && (
-                    <div>
-                        {error.message}
-                    </div>
-                )}
+                <TranslationView />
             </div>
         );
     }

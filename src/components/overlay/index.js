@@ -27,6 +27,7 @@ type Props = {
     acceptText?: string, //eslint-disable-line
     cancelText?: string, //eslint-disable-line
     onAcceptButtonDisabled?: boolean, //eslint-disable-line
+    primary?: boolean, //eslint-disable-line
     onAcceptClick?: () => *, //eslint-disable-line
     autoHideCallback?: () => *,
     onClick?: () => *,
@@ -37,6 +38,7 @@ type Props = {
 export default class Overlay extends React.PureComponent<Props> {
     static defaultProps = {
         withCloseButton: false,
+        primary: false,
     };
 
     timer: TimeoutID;
@@ -45,6 +47,7 @@ export default class Overlay extends React.PureComponent<Props> {
         const {
             autoHideTime,
             autoHideCallback,
+            primary,
         } = this.props;
 
         if (autoHideTime && autoHideCallback) {
@@ -52,7 +55,7 @@ export default class Overlay extends React.PureComponent<Props> {
         }
 
         const documentElement = document.documentElement;
-        if (documentElement) {
+        if (primary && documentElement) {
             documentElement.classList.add(WITH_OVERLAY_CLASSNAME);
         }
     }
@@ -71,13 +74,16 @@ export default class Overlay extends React.PureComponent<Props> {
     };
 
     componentWillUnmount() {
-        const { onClose } = this.props;
+        const {
+            onClose,
+            primary,
+        } = this.props;
         if (this.timer) {
             clearTimeout(this.timer);
         }
 
         const documentElement = document.documentElement;
-        if (documentElement) {
+        if (primary && documentElement) {
             documentElement.classList.remove(WITH_OVERLAY_CLASSNAME);
         }
 

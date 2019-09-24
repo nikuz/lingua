@@ -1,4 +1,8 @@
 .translation-container {
+    justify-content: flex-start;
+}
+
+.translation-container-content {
     padding-bottom: 2vmax;
     overflow: auto;
 }
@@ -8,7 +12,8 @@
 }
 
 .translation-head {
-    padding: 1.2vmax 1.5vmax;
+    position: relative;
+    padding: 1.2vmax 1.5vmax 2vmax;
     background-color: #1a73e8;
     color: var(--white);
 }
@@ -16,6 +21,10 @@
 .th-translation-container {
     display: flex;
     flex-direction: row;
+}
+
+.thtc-original {
+    font-size: 3vmax;
 }
 
 .thtc-separator {
@@ -27,34 +36,55 @@
 
 .thtc-direction-icon {
     width: 2vmax;
-    height: 1.5vmax;
+    height: 2vmax;
+    margin-bottom: -0.6vmax;
 }
 
-.tho-transcription {
+.th-transcription {
     margin-top: 2vmax;
     font-size: 2vmax;
 }
 
 .thtc-translation {
     position: relative;
+    font-size: 3vmax;
 }
 
 .th-verified-icon {
     position: absolute;
     top: 50%;
     left: 100%;
-    margin-left: 1vmax;
+    margin-left: 2vmax;
     width: 2vmax;
     height: 2vmax;
-    transform: translateY(-50%);
+    transform: translateY(-30%);
 }
 
-.tho-pronunciation {
-    margin-top: 2vmax;
+.th-footer {
+    margin-top: 4vmax;
     display: flex;
+    justify-content: space-between;
 }
 
-.tho-pronunciation-icon {
+.th-image-container {
+    position: absolute;
+    left: 50%;
+    bottom: 2vmax;
+    transform: translateX(-50%);
+}
+
+.thic-error {
+    width: 7vmax;
+    height: 7vmax;
+    color: var(--gray);
+}
+
+.thic-image {
+    width: 10vmax;
+    height: 10vmax;
+}
+
+.th-save-button-icon {
     width: 3vmax;
     height: 3vmax;
 }
@@ -94,16 +124,18 @@
 }
 
 .otci-word {
-    width: 30%;
-    margin-right: 5vmax;
+    width: 40%;
+    margin-right: 2vmax;
 }
 
 .otci-word-btn {
-    padding-top: 1.5vmax;
     min-height: 4.3vmax;
     display: inline-block;
     overflow: hidden;
     max-width: 100%;
+    padding: 1vmax 0 0;
+    font-size: 2.5vmax;
+    text-transform: none;
     text-overflow: ellipsis;
 }
 
@@ -114,7 +146,8 @@
 }
 
 .otci-frequency {
-    width: 5%;
+    width: 4vmax;
+    white-space: nowrap;
     margin-left: 2vmax;
     padding-top: 2.5vmax;
     font-size: 0;
@@ -128,6 +161,10 @@
     vertical-align: top;
     width: 1vmax;
     background-color: #dadce0;
+}
+
+.otci-frequency-item:last-child {
+    margin-right: 0;
 }
 
 .otci-frequency-item.active {

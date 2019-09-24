@@ -1,6 +1,5 @@
 // @flow
 
-export const apiIPGetterURL = 'http://upwatcher.selfproduct.com/ip';
 export const apiPort = 5789;
 
 export const BASE_WIDTH = 192; // in vmax
