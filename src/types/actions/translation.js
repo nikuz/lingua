@@ -1,7 +1,10 @@
 // @flow
 
 import type { ErrorObject } from '../common';
-import type { TranslationResponse } from '../translation';
+import type {
+    TranslationResponse,
+    ImageResponse,
+} from '../translation';
 
 export const TRANSLATION_REQUEST = 'TRANSLATION_REQUEST';
 export const TRANSLATION_SUCCESS = 'TRANSLATION_SUCCESS';
@@ -47,7 +50,7 @@ export type TranslationImageRequestAction = {
 
 export type TranslationImageSuccessAction = {
     +type: 'TRANSLATION_IMAGE_SUCCESS',
-    +payload: string,
+    +payload: ImageResponse,
 };
 
 export type TranslationImageFailureAction = {

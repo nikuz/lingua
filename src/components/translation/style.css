@@ -61,7 +61,7 @@
 }
 
 .th-footer {
-    margin-top: 4vmax;
+    margin-top: 7vmax;
     display: flex;
     justify-content: space-between;
 }
@@ -80,8 +80,7 @@
 }
 
 .thic-image {
-    width: 10vmax;
-    height: 10vmax;
+    height: 12vmax;
 }
 
 .th-save-button-icon {

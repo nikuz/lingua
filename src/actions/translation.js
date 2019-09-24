@@ -57,7 +57,7 @@ export const getImage = (word: string) => (
         successAction: TRANSLATION_IMAGE_SUCCESS,
         failureAction: TRANSLATION_IMAGE_FAILURE,
         action: () => request.get({
-            url: `${apiUrl}/image?word=${word}`,
+            url: `${apiUrl}/image?q=${word}`,
             headers: {
                 Authorization: process.env.API_KEY,
             },
@@ -76,7 +76,7 @@ export const removePronunciation = (word: string) => (
         successAction: TRANSLATION_REMOVE_PRONUNCIATION_SUCCESS,
         failureAction: TRANSLATION_REMOVE_PRONUNCIATION_FAILURE,
         action: () => request.delete({
-            url: `${apiUrl}/pronunciation?word=${word}`,
+            url: `${apiUrl}/pronunciation?q=${word}`,
             headers: {
                 Authorization: process.env.API_KEY,
             },

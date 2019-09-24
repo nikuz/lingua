@@ -17,7 +17,7 @@ import './style.css';
 
 type Props = {
     apiUrl: string,
-    translation: TranslationResponse,
+    translation: TranslationResponse, // eslint-disable-line
     error: ?ErrorObject,
     imageLoading: boolean,
     image: ?string,
@@ -42,17 +42,6 @@ type State = {
 
 export default class TranslationView extends React.Component<Props, State> {
     state = {};
-
-    shouldComponentUpdate = (nextProps: Props) => (
-        (!this.props.translation && !!nextProps.translation)
-        || (this.props.translation && !nextProps.translation)
-        || this.props.error !== nextProps.error
-        || (
-            this.props.translation
-            && nextProps.translation
-            && this.props.translation.word !== nextProps.translation.word
-        )
-    );
 
     static getDerivedStateFromProps(newProps: Props) {
         const translation = newProps.translation || {};

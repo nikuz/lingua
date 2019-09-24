@@ -109,7 +109,7 @@ export default function translationReducer(
             return {
                 ...state,
                 imageLoading: false,
-                image: action.payload,
+                image: action.payload.image,
             };
 
         case TRANSLATION_IMAGE_FAILURE:

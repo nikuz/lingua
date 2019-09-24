@@ -9,3 +9,7 @@ export type TranslationResponse = {
     image?: string,
     created_at?: string,
 };
+
+export type ImageResponse = {
+    image: string,
+};
