@@ -43,8 +43,8 @@ type State = {
 export default class TranslationView extends React.Component<Props, State> {
     state = {};
 
-    shouldComponentUpdate = (nextProps: Props, nextState: State) => (
-        (!this.props.translation && nextProps.translation)
+    shouldComponentUpdate = (nextProps: Props) => (
+        (!this.props.translation && !!nextProps.translation)
         || (this.props.translation && !nextProps.translation)
         || this.props.error !== nextProps.error
         || (
@@ -58,7 +58,7 @@ export default class TranslationView extends React.Component<Props, State> {
         const translation = newProps.translation || {};
 
         if (translation) {
-            let word = translation.word;
+            const word = translation.word;
             let translationWord = translation.translation;
             let strangeWord;
             let newState = {
@@ -172,8 +172,6 @@ export default class TranslationView extends React.Component<Props, State> {
             return null;
         }
 
-        const pronunciationUrl = `${apiUrl}${pronunciation}`;
-
         return (
             <Overlay
                 className="translation-container"
@@ -201,7 +199,9 @@ export default class TranslationView extends React.Component<Props, State> {
                     </div>
                     <div className="th-footer">
                         { pronunciation && (
-                            <Pronunciation url={pronunciationUrl} />
+                            <Pronunciation
+                                url={`${apiUrl}${pronunciation}`}
+                            />
                         ) }
                         { !strangeWord && (
                             <Button

@@ -61,4 +61,5 @@ rules:
   no-bitwise: 0
   flowtype/define-flow-type: 1
   flowtype/use-flow-type: 1
+  react/state-in-constructor: 0
 

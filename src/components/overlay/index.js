@@ -17,7 +17,7 @@ type Props = {
     className?: string | { [className: string]: * },
     contentClassName?: string | { [className: string]: * },
     blockerClassName?: string | { [className: string]: * },
-    message?: string,
+    message?: string | Array<string>,
     children?: React.Node,
     autoHideTime?: number,
     withCloseButton?: boolean,

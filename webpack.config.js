@@ -30,7 +30,7 @@ const plugins = [
         inject: false,
     }),
     new webpack.EnvironmentPlugin({
-        'NODE_ENV': process.env.NODE_ENV,
+        NODE_ENV: process.env.NODE_ENV,
         API_GETTER_URL: process.env.LINGUA_API_GETTER_URL,
         API_KEY: process.env.LINGUA_API_KEY,
     }),

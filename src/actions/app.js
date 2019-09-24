@@ -5,6 +5,7 @@ import {
     actionCreator,
     request,
 } from '../utils';
+import { routerSelectors } from '../selectors';
 import {
     APP_GET_API_IP_REQUEST,
     APP_GET_API_IP_SUCCESS,
@@ -18,7 +19,7 @@ export const getApiIP = () => (dispatch: DispatchAPI<*>) => (
         successAction: APP_GET_API_IP_SUCCESS,
         failureAction: APP_GET_API_IP_FAILURE,
         action: () => request.get({
-            url: process.env.API_GETTER_URL,
+            url: routerSelectors.getIPGetterUrl(),
         }),
     })
 );

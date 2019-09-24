@@ -8,7 +8,7 @@ type ItemProps = {
     id: number,
     data: Array<string | number>,
     categoryName: string,
-    synonymsData: Array<*>,
+    synonymsData?: Array<any>,
 }
 
 const Item = (props: ItemProps) => {
@@ -69,7 +69,11 @@ type Props = {
     synonymsData?: Array<any>,
 };
 
-export default class TranslationDefinitionsView extends React.Component<Props> {
+type State = {
+    expanded: boolean,
+};
+
+export default class TranslationDefinitionsView extends React.Component<Props, State> {
     state = {
         expanded: false,
     };
@@ -157,4 +161,4 @@ export default class TranslationDefinitionsView extends React.Component<Props> {
 
         return result;
     }
-};
+}

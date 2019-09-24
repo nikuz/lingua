@@ -17,6 +17,10 @@ const getLocationPath: (StoreState) => string = createSelector(
 // public methods
 // ----------------
 
+export const getIPGetterUrl = (): string => (
+    process.env.API_GETTER_URL || ''
+);
+
 export const getApiUrl: (StoreState) => string = createSelector(
     (state: StoreState): string => state.app.apiIP,
     (apiIP: string) => `http://${apiIP}:${appConstants.apiPort}`

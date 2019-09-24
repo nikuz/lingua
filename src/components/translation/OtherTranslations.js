@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
-import classNames from "classnames";
-import Button, {ButtonBlue} from '../button';
+import classNames from 'classnames';
+import Button, { ButtonBlue } from '../button';
 
 const SHOW_MIN_TRANSLATIONS = 5;
 
 type ItemProps = {
     data: Array<[] | string | number>,
-    onClick: () => *,
+    onClick: (word: string) => *,
 }
 
 const Item = (props: ItemProps) => {
@@ -48,10 +48,14 @@ const Item = (props: ItemProps) => {
 type Props = {
     word: string,
     data?: Array<any>,
-    onSelect: () => *,
+    onSelect: (word: string) => *,
 };
 
-export default class TranslationOthersView extends React.Component<Props> {
+type State = {
+    expanded: boolean,
+};
+
+export default class TranslationOthersView extends React.Component<Props, State> {
     state = {
         expanded: false,
     };
@@ -138,4 +142,4 @@ export default class TranslationOthersView extends React.Component<Props> {
 
         return result;
     }
-};
+}

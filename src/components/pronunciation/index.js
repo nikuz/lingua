@@ -31,12 +31,22 @@ export default class Pronunciation extends React.Component<Props, State> {
     };
 
     stop = () => {
-        if (this.pronunciationEl) {
-            this.pronunciationEl.pause();
-            this.pronunciationEl.currentTime = 0;
+        const audioEl = this.pronunciationEl;
+        if (audioEl) {
+            audioEl.pause();
+            audioEl.currentTime = 0;
             this.setState({
                 playStarted: false,
             });
+        }
+    };
+
+    playToggle = () => {
+        const { playStarted } = this.state;
+        if (playStarted) {
+            this.stop();
+        } else {
+            this.play();
         }
     };
 
@@ -76,23 +86,12 @@ export default class Pronunciation extends React.Component<Props, State> {
                     onPlay={this.playStartedHandler}
                     onEnded={this.playStoppedHandler}
                 />
-                { playStarted
-                    ? (
-                        <Button
-                            leftIcon="stop"
-                            leftIconClassName="pronunciation-icon"
-                            onClick={this.stop}
-                        />
-                    )
-                    : (
-                        <Button
-                            leftIcon="speaker"
-                            leftIconClassName="pronunciation-icon"
-                            onClick={this.play}
-                        />
-                    )
-                }
+                <Button
+                    leftIcon={playStarted ? 'stop' : 'speaker'}
+                    leftIconClassName="pronunciation-icon"
+                    onClick={this.playToggle}
+                />
             </div>
         );
-    };
+    }
 }

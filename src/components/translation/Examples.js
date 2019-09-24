@@ -10,7 +10,11 @@ type Props = {
     examples?: Array<any>,
 };
 
-export default class TranslationExamplesView extends React.Component<Props> {
+type State = {
+    expanded: boolean,
+};
+
+export default class TranslationExamplesView extends React.Component<Props, State> {
     state = {
         expanded: false,
     };
@@ -97,4 +101,4 @@ export default class TranslationExamplesView extends React.Component<Props> {
 
         return result;
     }
-};
+}
