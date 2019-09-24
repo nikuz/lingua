@@ -1,3 +1,7 @@
+.text-field-wrapper {
+    position: relative;
+}
+
 .text-field {
     display: flex;
     flex-direction: row;
@@ -72,4 +76,11 @@
     min-height: 4vmax;
     background-color: var(--gray-dark) !important;
     color: var(--white);
+}
+
+.tf-loading {
+    position: absolute;
+    top: 50%;
+    right: 0.5vmax;
+    transform: translateY(-47%);
 }

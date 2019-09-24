@@ -5,7 +5,6 @@ import {
     TranslationView,
     TextField,
     ButtonGreen,
-    Loading,
 } from '../../components';
 import type { FormFieldString } from '../../types';
 import './style.css';
@@ -32,21 +31,16 @@ export default class Home extends React.Component<Props> {
 
         return (
             <div className="search-form">
-                <div className="sf-input-wrapper">
-                    <TextField
-                        type="text"
-                        id={searchField.id}
-                        value={searchField.value}
-                        spellcheck={false}
-                        withClearButton
-                        className="sf-input"
-                    />
-                    { translationGetLoading && (
-                        <div className="sf-loading">
-                            <Loading size="small" />
-                        </div>
-                    ) }
-                </div>
+                <TextField
+                    type="text"
+                    id={searchField.id}
+                    value={searchField.value}
+                    spellcheck={false}
+                    withClearButton
+                    autoFocus
+                    withLoading={translationGetLoading}
+                    className="sf-input"
+                />
                 <ButtonGreen
                     disabled={isSubmitDisabled}
                     className="sf-submit"

@@ -10,22 +10,10 @@
     margin: 0 auto;
 }
 
-.sf-input-wrapper {
-    position: relative;
-    flex: 1;
-}
-
 .sf-input {
-    width: 100%;
+    flex: 1;
 }
 
 .sf-submit {
     margin-left: 1vmax;
-}
-
-.sf-loading {
-    position: absolute;
-    top: 50%;
-    right: 1vmax;
-    transform: translateY(-47%);
 }

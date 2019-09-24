@@ -81,6 +81,7 @@
 
 .thic-image {
     height: 12vmax;
+    max-width: 35vmax;
 }
 
 .th-save-button-icon {

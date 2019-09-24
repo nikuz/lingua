@@ -3,6 +3,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { ButtonTransparent } from '../button';
+import Loading from '../loading';
 import type { FormReducerState } from '../../reducers/form';
 import './style.css';
 
@@ -29,6 +30,7 @@ type Props = {
     passwordVisible?: boolean,
     spellcheck?: boolean,
     withClearButton?: boolean,
+    withLoading?: boolean,
     onChange?: (e: TextFieldData) => *,
     onFocus?: (e: Event) => *,
     onBlur?: (e: Event) => *,
@@ -45,6 +47,7 @@ class TextField extends React.Component<Props> {
         type: 'text',
         spellcheck: true,
         withClearButton: false,
+        withLoading: false,
     };
 
     fieldEl: ?HTMLElement;
@@ -53,6 +56,7 @@ class TextField extends React.Component<Props> {
         nextProps.value !== this.props.value
         || nextProps.form[nextProps.id] !== this.props.form[this.props.id]
         || nextProps.disabled !== this.props.disabled
+        || nextProps.withLoading !== this.props.withLoading
     );
 
 
@@ -198,20 +202,22 @@ class TextField extends React.Component<Props> {
             placeholder,
             spellcheck,
             withClearButton,
+            withLoading,
         } = this.props;
         let {
             value,
+            className,
             fieldClassName,
         } = this.props;
+        className = classNames(
+            'text-field-wrapper',
+            className
+        );
         fieldClassName = classNames(
             'text-field',
             type === 'password' && 'tf-password',
             withClearButton && 'with-clear-button',
             fieldClassName
-        );
-        const fieldWrapperClassName = classNames(
-            'tf-wrapper',
-            type === 'password' && 'relative'
         );
         const labelEl = label && (
             <div className="text-field-label">
@@ -224,47 +230,50 @@ class TextField extends React.Component<Props> {
         value = type === 'number' && value === null ? '' : value;
 
         return (
-            <div className={this.props.className}>
-                <div className={fieldWrapperClassName}>
-                    { labelEl }
-                    <input
-                        ref={(el) => this.fieldEl = el}
-                        type={passwordVisible ? 'text' : (type || 'text')}
-                        id={id}
-                        value={value}
-                        className={fieldClassName}
-                        disabled={disabled}
-                        autoFocus={autoFocus}
-                        maxLength={maxLength}
-                        min={min}
-                        max={max}
-                        autoComplete="new-password"
-                        spellCheck={spellcheck}
-                        autoCapitalize={spellcheck === false ? 'none' : 'true'}
-                        autoCorrect={spellcheck === false ? 'off' : 'on'}
-                        placeholder={placeholder}
-                        onFocus={this.onFocusHandler}
-                        onBlur={this.onBlurHandler}
-                        onChange={this.onChangeHandler}
-                        onKeyDown={this.onKeyDownHandler}
+            <div className={className}>
+                { labelEl }
+                <input
+                    ref={(el) => this.fieldEl = el}
+                    type={passwordVisible ? 'text' : (type || 'text')}
+                    id={id}
+                    value={value}
+                    className={fieldClassName}
+                    disabled={disabled}
+                    autoFocus={autoFocus}
+                    maxLength={maxLength}
+                    min={min}
+                    max={max}
+                    autoComplete="new-password"
+                    spellCheck={spellcheck}
+                    autoCapitalize={spellcheck === false ? 'none' : 'true'}
+                    autoCorrect={spellcheck === false ? 'off' : 'on'}
+                    placeholder={placeholder}
+                    onFocus={this.onFocusHandler}
+                    onBlur={this.onBlurHandler}
+                    onChange={this.onChangeHandler}
+                    onKeyDown={this.onKeyDownHandler}
+                />
+                { type === 'password' && (
+                    <ButtonTransparent
+                        leftIcon={passwordVisible ? 'password-eye' : 'password-eye-closed'}
+                        className="tf-password-visibility-switcher"
+                        leftIconClassName="tfpvs-icon"
+                        onClick={this.passwordVisibilityToggle}
                     />
-                    { type === 'password' && (
-                        <ButtonTransparent
-                            leftIcon={passwordVisible ? 'password-eye' : 'password-eye-closed'}
-                            className="tf-password-visibility-switcher"
-                            leftIconClassName="tfpvs-icon"
-                            onClick={this.passwordVisibilityToggle}
-                        />
-                    ) }
-                    { withClearButton && (
-                        <ButtonTransparent
-                            leftIcon="close"
-                            className="tf-clear"
-                            leftIconClassName="tf-clear-icon"
-                            onClick={this.clearText}
-                        />
-                    ) }
-                </div>
+                ) }
+                { !withLoading && withClearButton && (
+                    <ButtonTransparent
+                        leftIcon="close"
+                        className="tf-clear"
+                        leftIconClassName="tf-clear-icon"
+                        onClick={this.clearText}
+                    />
+                ) }
+                { withLoading && (
+                    <div className="tf-loading">
+                        <Loading size="small" />
+                    </div>
+                ) }
             </div>
         );
     }
