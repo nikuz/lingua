@@ -28,6 +28,7 @@ type Props = {
     maxLength?: number,
     passwordVisible?: boolean,
     spellcheck?: boolean,
+    withClearButton?: boolean,
     onChange?: (e: TextFieldData) => *,
     onFocus?: (e: Event) => *,
     onBlur?: (e: Event) => *,
@@ -43,6 +44,7 @@ class TextField extends React.Component<Props> {
     static defaultProps = {
         type: 'text',
         spellcheck: true,
+        withClearButton: false,
     };
 
     fieldEl: ?HTMLElement;
@@ -162,6 +164,25 @@ class TextField extends React.Component<Props> {
         }
     };
 
+    clearText = () => {
+        const {
+            onChange,
+            id,
+            type,
+            valueChange,
+        } = this.props;
+
+        let value = '';
+        if (type === 'number') {
+            value = null;
+        }
+
+        valueChange(id, value);
+        if (onChange && onChange instanceof Function) {
+            onChange({ id, value });
+        }
+    };
+
     render() {
         const {
             id,
@@ -176,6 +197,7 @@ class TextField extends React.Component<Props> {
             max,
             placeholder,
             spellcheck,
+            withClearButton,
         } = this.props;
         let {
             value,
@@ -184,6 +206,7 @@ class TextField extends React.Component<Props> {
         fieldClassName = classNames(
             'text-field',
             type === 'password' && 'tf-password',
+            withClearButton && 'with-clear-button',
             fieldClassName
         );
         const fieldWrapperClassName = classNames(
@@ -231,6 +254,14 @@ class TextField extends React.Component<Props> {
                             className="tf-password-visibility-switcher"
                             leftIconClassName="tfpvs-icon"
                             onClick={this.passwordVisibilityToggle}
+                        />
+                    ) }
+                    { withClearButton && (
+                        <ButtonTransparent
+                            leftIcon="close"
+                            className="tf-clear"
+                            leftIconClassName="tf-clear-icon"
+                            onClick={this.clearText}
                         />
                     ) }
                 </div>

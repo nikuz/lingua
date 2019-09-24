@@ -38,6 +38,7 @@ export default class Home extends React.Component<Props> {
                         id={searchField.id}
                         value={searchField.value}
                         spellcheck={false}
+                        withClearButton
                         className="sf-input"
                     />
                     { translationGetLoading && (

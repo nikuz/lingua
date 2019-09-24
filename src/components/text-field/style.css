@@ -36,6 +36,10 @@
     box-shadow: inset 0 0 0 0.1vmax #979797;
 }
 
+.text-field.with-clear-button {
+    padding-right: 6vmax;
+}
+
 .text-field-label {
     margin-bottom: 1.2vmax;
     font-size: 2.4vmax;
@@ -45,4 +49,27 @@
 
 .field-required-marker {
     color: #E34848;
+}
+
+.tf-password-visibility-switcher {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.tfpvs-icon,
+.tf-clear-icon {
+    width: 2vmax;
+    height: 2vmax;
+}
+
+.tf-clear {
+    position: absolute;
+    right: 1vmax;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4vmax!important;
+    min-height: 4vmax;
+    background-color: var(--gray-dark) !important;
+    color: var(--white);
 }
