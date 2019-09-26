@@ -34,7 +34,7 @@ html.with-overlay {
 .overlay-error-content {
     margin: 0 auto;
     display: flex;
-    width: 60%;
+    width: 45vmax;
     padding: 2.5vmax 3vmax;
     flex-direction: row;
     justify-content: center;;
@@ -56,6 +56,8 @@ html.with-overlay {
 
 .overlay-error-text {
     margin: 3vmax 0;
+    overflow-wrap: break-word;
+    max-width: 39vmax;
 }
 
 .overlay-error-btn {

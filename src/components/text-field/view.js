@@ -42,7 +42,11 @@ type Props = {
     clear: (field: string) => *,
 };
 
-class TextField extends React.Component<Props> {
+type State = {
+    focused: boolean,
+};
+
+class TextField extends React.Component<Props, State> {
     static defaultProps = {
         type: 'text',
         spellcheck: true,
@@ -50,13 +54,20 @@ class TextField extends React.Component<Props> {
         withLoading: false,
     };
 
+    state = {
+        focused: false,
+    };
+
     fieldEl: ?HTMLElement;
 
-    shouldComponentUpdate = (nextProps: Props) => (
+    blurTimer: TimeoutID;
+
+    shouldComponentUpdate = (nextProps: Props, nextState: State) => (
         nextProps.value !== this.props.value
         || nextProps.form[nextProps.id] !== this.props.form[this.props.id]
         || nextProps.disabled !== this.props.disabled
         || nextProps.withLoading !== this.props.withLoading
+        || nextState.focused !== this.state.focused
     );
 
 
@@ -77,6 +88,7 @@ class TextField extends React.Component<Props> {
     }
 
     componentWillUnmount() {
+        clearTimeout(this.blurTimer);
         this.props.clear(this.props.id);
     }
 
@@ -86,6 +98,11 @@ class TextField extends React.Component<Props> {
 
     onFocusHandler = (e: Event) => {
         const { onFocus } = this.props;
+
+        this.setState({
+            focused: true,
+        });
+        clearTimeout(this.blurTimer);
 
         if (onFocus && onFocus instanceof Function) {
             onFocus(e);
@@ -117,6 +134,12 @@ class TextField extends React.Component<Props> {
                 }
             }
         }
+
+        this.blurTimer = setTimeout(() => {
+            this.setState({
+                focused: false,
+            });
+        }, 500);
 
         if (onBlur && onBlur instanceof Function) {
             onBlur(e);
@@ -181,6 +204,11 @@ class TextField extends React.Component<Props> {
             value = null;
         }
 
+        clearTimeout(this.blurTimer);
+        this.setState({
+            focused: false,
+        });
+
         valueChange(id, value);
         if (onChange && onChange instanceof Function) {
             onChange({ id, value });
@@ -209,6 +237,7 @@ class TextField extends React.Component<Props> {
             className,
             fieldClassName,
         } = this.props;
+        const { focused } = this.state;
         className = classNames(
             'text-field-wrapper',
             className
@@ -261,7 +290,7 @@ class TextField extends React.Component<Props> {
                         onClick={this.passwordVisibilityToggle}
                     />
                 ) }
-                { !withLoading && withClearButton && (
+                { !withLoading && focused && withClearButton && (
                     <ButtonTransparent
                         leftIcon="close"
                         className="tf-clear"

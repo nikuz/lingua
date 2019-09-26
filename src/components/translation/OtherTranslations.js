@@ -125,7 +125,10 @@ export default class TranslationOthersView extends React.Component<Props, State>
             </div>,
         ];
 
-        if (otherTranslationsCount > SHOW_MIN_TRANSLATIONS) {
+        const withExpandButton = otherTranslationsCount > SHOW_MIN_TRANSLATIONS
+            && otherTranslationsCount - otherTranslationsShown > 0;
+
+        if (withExpandButton) {
             result.push(
                 <ButtonBlue
                     key="expand-button"
@@ -136,6 +139,13 @@ export default class TranslationOthersView extends React.Component<Props, State>
                     }
                     className="tc-expand-button"
                     onClick={this.expand}
+                />
+            );
+        } else {
+            result.push(
+                <div
+                    key="expand-button-replacement"
+                    className="tc-expand-replacement"
                 />
             );
         }

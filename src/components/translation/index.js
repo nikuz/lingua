@@ -18,7 +18,6 @@ const mapStateToProps = (state: StoreState) => ({
 const mapDispatchToProps = ({
     getImage: translationActions.getImage,
     clear: translationActions.clearState,
-    removePronunciation: translationActions.removePronunciation,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(View);

@@ -9,6 +9,13 @@ import {
     TRANSLATION_IMAGE_REQUEST,
     TRANSLATION_IMAGE_SUCCESS,
     TRANSLATION_IMAGE_FAILURE,
+    TRANSLATION_SAVE_REQUEST,
+    TRANSLATION_SAVE_SUCCESS,
+    TRANSLATION_SAVE_FAILURE,
+    TRANSLATION_UPDATE_REQUEST,
+    TRANSLATION_UPDATE_SUCCESS,
+    TRANSLATION_UPDATE_FAILURE,
+    TRANSLATION_HIDE_ERRORS,
 } from '../types/actions/translation';
 import type {
     TranslationRequestAction,
@@ -20,6 +27,13 @@ import type {
     TranslationImageRequestAction,
     TranslationImageSuccessAction,
     TranslationImageFailureAction,
+    TranslationSaveRequestAction,
+    TranslationSaveSuccessAction,
+    TranslationSaveFailureAction,
+    TranslationUpdateRequestAction,
+    TranslationUpdateSuccessAction,
+    TranslationUpdateFailureAction,
+    TranslationHideErrorsAction,
     ErrorObject,
     TranslationResponse,
 } from '../types';
@@ -33,6 +47,10 @@ export type TranslationReducerState = {
     imageLoading: boolean,
     image: ?string,
     imageError: ?ErrorObject,
+    saveLoading: boolean,
+    saveError: ?ErrorObject,
+    updateLoading: boolean,
+    updateError: ?ErrorObject,
 };
 
 const initialState: TranslationReducerState = {
@@ -44,6 +62,11 @@ const initialState: TranslationReducerState = {
     imageLoading: false,
     image: null,
     imageError: null,
+    saveLoading: false,
+    saveData: null,
+    saveError: null,
+    updateLoading: false,
+    updateError: null,
 };
 
 type Action =
@@ -55,7 +78,14 @@ type Action =
     | TranslationRemovePronunciationFailureAction
     | TranslationImageRequestAction
     | TranslationImageSuccessAction
-    | TranslationImageFailureAction;
+    | TranslationImageFailureAction
+    | TranslationSaveRequestAction
+    | TranslationSaveSuccessAction
+    | TranslationSaveFailureAction
+    | TranslationUpdateRequestAction
+    | TranslationUpdateSuccessAction
+    | TranslationUpdateFailureAction
+    | TranslationHideErrorsAction;
 
 export default function translationReducer(
     state: TranslationReducerState = initialState,
@@ -117,6 +147,55 @@ export default function translationReducer(
                 ...state,
                 imageLoading: false,
                 imageError: action.payload,
+            };
+
+        case TRANSLATION_SAVE_REQUEST:
+            return {
+                ...state,
+                saveLoading: true,
+                saveError: null,
+            };
+
+        case TRANSLATION_SAVE_SUCCESS:
+            return {
+                ...state,
+                saveLoading: false,
+                translation: action.payload,
+            };
+
+        case TRANSLATION_SAVE_FAILURE:
+            return {
+                ...state,
+                saveLoading: false,
+                saveError: action.payload,
+            };
+
+        case TRANSLATION_UPDATE_REQUEST:
+            return {
+                ...state,
+                updateLoading: true,
+                updateError: null,
+            };
+
+        case TRANSLATION_UPDATE_SUCCESS:
+            return {
+                ...state,
+                updateLoading: false,
+                translation: action.payload,
+            };
+
+        case TRANSLATION_UPDATE_FAILURE:
+            return {
+                ...state,
+                updateLoading: false,
+                updateError: action.payload,
+            };
+
+        case TRANSLATION_HIDE_ERRORS:
+            return {
+                ...state,
+                updateError: null,
+                saveError: null,
             };
 
         case TRANSLATION_CLEAR_STATE:

@@ -84,7 +84,10 @@ export default class TranslationExamplesView extends React.Component<Props, Stat
             </div>,
         ];
 
-        if (examplesCount > SHOW_MIN_EXAMPLES) {
+        const withExpandButton = examplesCount > SHOW_MIN_EXAMPLES
+            && examplesCount - examplesShown > 0;
+
+        if (withExpandButton) {
             result.push(
                 <ButtonBlue
                     key="expand-button"
@@ -95,6 +98,13 @@ export default class TranslationExamplesView extends React.Component<Props, Stat
                     }
                     className="tc-expand-button"
                     onClick={this.expand}
+                />
+            );
+        } else {
+            result.push(
+                <div
+                    key="expand-button-replacement"
+                    className="tc-expand-replacement"
                 />
             );
         }

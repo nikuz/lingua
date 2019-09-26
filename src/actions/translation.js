@@ -17,10 +17,18 @@ import {
     TRANSLATION_IMAGE_REQUEST,
     TRANSLATION_IMAGE_SUCCESS,
     TRANSLATION_IMAGE_FAILURE,
+    TRANSLATION_SAVE_REQUEST,
+    TRANSLATION_SAVE_SUCCESS,
+    TRANSLATION_SAVE_FAILURE,
+    TRANSLATION_UPDATE_REQUEST,
+    TRANSLATION_UPDATE_SUCCESS,
+    TRANSLATION_UPDATE_FAILURE,
+    TRANSLATION_HIDE_ERRORS,
 } from '../types/actions/translation';
 import type { StoreState } from '../store/type';
 import type {
     TranslationResponse,
+    TranslationSaveRequest,
 } from '../types';
 
 export const get = (word: string) => (
@@ -83,3 +91,49 @@ export const removePronunciation = (word: string) => (
         }),
     });
 };
+
+export const save = (data: TranslationSaveRequest) => (
+    dispatch: DispatchAPI<*>,
+    getState: () => StoreState
+): Promise<TranslationResponse> => {
+    const apiUrl = routerSelectors.getApiUrl(getState());
+    return actionCreator({
+        dispatch,
+        requestAction: TRANSLATION_SAVE_REQUEST,
+        successAction: TRANSLATION_SAVE_SUCCESS,
+        failureAction: TRANSLATION_SAVE_FAILURE,
+        action: () => request.post({
+            url: `${apiUrl}/translate`,
+            args: data,
+            headers: {
+                Authorization: process.env.API_KEY,
+            },
+            contentType: 'json',
+        }),
+    });
+};
+
+export const update = (data: TranslationSaveRequest) => (
+    dispatch: DispatchAPI<*>,
+    getState: () => StoreState
+): Promise<TranslationResponse> => {
+    const apiUrl = routerSelectors.getApiUrl(getState());
+    return actionCreator({
+        dispatch,
+        requestAction: TRANSLATION_UPDATE_REQUEST,
+        successAction: TRANSLATION_UPDATE_SUCCESS,
+        failureAction: TRANSLATION_UPDATE_FAILURE,
+        action: () => request.put({
+            url: `${apiUrl}/translate`,
+            args: data,
+            headers: {
+                Authorization: process.env.API_KEY,
+            },
+            contentType: 'json',
+        }),
+    });
+};
+
+export const translationHideErrors = () => ({
+    type: TRANSLATION_HIDE_ERRORS,
+});

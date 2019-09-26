@@ -7,6 +7,7 @@ import Icon from '../icon';
 import Loading from '../loading';
 import type {
     TranslationResponse,
+    TranslationSaveRequest,
     ErrorObject,
 } from '../../types';
 import Pronunciation from '../pronunciation';
@@ -20,17 +21,19 @@ type Props = {
     translation: TranslationResponse, // eslint-disable-line
     error: ?ErrorObject,
     imageLoading: boolean,
-    image: ?string,
+    image?: string,
     imageError: ?ErrorObject,
     getImage: (word: string) => *,
     clear: () => *,
-    removePronunciation: (word: string) => *,
+    onClose: () => *,
+    onWordSelect: (data: TranslationSaveRequest) => *,
 };
 
 type State = {
+    id?: number,
     word?: string,
     strangeWord?: boolean,
-    translation?: string,
+    translationWord?: string,
     image?: string,
     highestRelevantTranslation?: Array<any>,
     otherTranslations?: Array<any>,
@@ -51,6 +54,7 @@ export default class TranslationView extends React.Component<Props, State> {
             let translationWord = translation.translation;
             let strangeWord;
             let newState = {
+                id: translation.id,
                 image: translation.image,
                 pronunciation: translation.pronunciation,
             };
@@ -80,7 +84,7 @@ export default class TranslationView extends React.Component<Props, State> {
                 ...newState,
                 word,
                 strangeWord,
-                translation: translationWord,
+                translationWord,
                 highestRelevantTranslation,
                 otherTranslations,
                 definitions,
@@ -101,12 +105,15 @@ export default class TranslationView extends React.Component<Props, State> {
             imageError,
         } = this.props;
         const {
+            id,
             word,
             strangeWord,
         } = this.state;
 
         if (
-            !prevState.word && word
+            !id
+            && !prevState.word
+            && word
             && !strangeWord
             && !image
             && !imageLoading
@@ -116,15 +123,37 @@ export default class TranslationView extends React.Component<Props, State> {
         }
     }
 
-    selectMainTranslationWord = (word: string) => {
-        console.log(word);
+    selectMainTranslationWord = (value?: string) => {
+        const {
+            translation,
+            image,
+        } = this.props;
+        const {
+            id,
+            word,
+            pronunciation,
+        } = this.state;
+        const translationWord = value;
+
+        if (translation && translation.raw && word && pronunciation && translationWord) {
+            this.props.onWordSelect({
+                id,
+                word,
+                translation: translationWord,
+                pronunciationURL: pronunciation,
+                image,
+                raw: JSON.stringify(translation.raw),
+            });
+        }
     };
 
     close = () => {
-        const { word } = this.state;
-        if (word) {
-            this.props.removePronunciation(word);
+        const { onClose } = this.props;
+
+        if (onClose instanceof Function) {
+            onClose();
         }
+
         this.props.clear();
     };
 
@@ -133,13 +162,12 @@ export default class TranslationView extends React.Component<Props, State> {
             apiUrl,
             error,
             imageLoading,
-            image,
             imageError,
         } = this.props;
         const {
             word,
             strangeWord,
-            translation,
+            translationWord,
             highestRelevantTranslation,
             pronunciation,
             otherTranslations,
@@ -147,6 +175,11 @@ export default class TranslationView extends React.Component<Props, State> {
             definitionsSynonyms,
             examples,
         } = this.state;
+        let image = this.props.image;
+
+        if (this.state.image) {
+            image = `${apiUrl}${this.state.image}`;
+        }
 
         if (error) {
             return (
@@ -160,6 +193,9 @@ export default class TranslationView extends React.Component<Props, State> {
         if (!word || !highestRelevantTranslation) {
             return null;
         }
+
+        const verified = translationWord === highestRelevantTranslation[0][0]
+            && highestRelevantTranslation[0][4];
 
         return (
             <Overlay
@@ -177,8 +213,8 @@ export default class TranslationView extends React.Component<Props, State> {
                             <Icon src="right-arrow" className="thtc-direction-icon" />
                         </div>
                         <div className="thtc-translation">
-                            {translation}
-                            {!!highestRelevantTranslation[0][4] && (
+                            {translationWord}
+                            {!!verified && (
                                 <Icon src="verified" className="th-verified-icon" />
                             )}
                         </div>
@@ -196,7 +232,9 @@ export default class TranslationView extends React.Component<Props, State> {
                             <Button
                                 leftIcon="save"
                                 leftIconClassName="th-save-button-icon"
-                                onClick={this.selectMainTranslationWord}
+                                onClick={() => {
+                                    this.selectMainTranslationWord(translationWord);
+                                }}
                             />
                         ) }
                     </div>

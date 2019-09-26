@@ -144,7 +144,10 @@ export default class TranslationDefinitionsView extends React.Component<Props, S
             </div>,
         ];
 
-        if (definitionsCount > SHOW_MIN_DEFINITIONS) {
+        const withExpandButton = definitionsCount > SHOW_MIN_DEFINITIONS
+            && definitionsCount - definitionsShown > 0;
+
+        if (withExpandButton) {
             result.push(
                 <ButtonBlue
                     key="expand-button"
@@ -155,6 +158,13 @@ export default class TranslationDefinitionsView extends React.Component<Props, S
                     }
                     className="tc-expand-button"
                     onClick={this.expand}
+                />
+            );
+        } else {
+            result.push(
+                <div
+                    key="expand-button-replacement"
+                    className="tc-expand-replacement"
                 />
             );
         }

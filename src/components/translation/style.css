@@ -118,6 +118,10 @@
     color: #4285f4;
 }
 
+.ot-category {
+    margin-top: 2vmax;
+}
+
 .otc-item {
     display: flex;
     flex-direction: row;
@@ -243,4 +247,12 @@
     margin: 0 1vmax;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+.tc-expand-replacement {
+    height: 1vmax;
+    margin: 0 1vmax;
+    border: 0.1vmax solid #dadce0;
+    border-top: none;
+    border-radius: 0 0 1vmax 1vmax;
 }
