@@ -3,10 +3,9 @@
 import * as React from 'react';
 import {
     TranslationView,
-    TextField,
-    ButtonGreen,
     OverlayLoading,
     OverlayError,
+    Search,
 } from '../../components';
 import type {
     ErrorObject,
@@ -16,25 +15,48 @@ import type {
 } from '../../types';
 import './style.css';
 
+const PAGE_SIZE = 20;
+
 type Props = {
     translation: ?TranslationResponse,
+    getError: ?ErrorObject,
     translationGetLoading: boolean,
     searchField: FormFieldString,
     translationSaveLoading: boolean,
     translationSaveError: ?ErrorObject,
     translationUpdateLoading: boolean,
     translationUpdateError: ?ErrorObject,
+    getListLoading: boolean,
+    translationsList: TranslationResponse[],
+    getListError: ?ErrorObject,
     translationGet: (word: string) => *,
     removePronunciation: (word: string) => *,
     translationSave: (data: TranslationSaveRequest) => *,
     translationUpdate: (data: TranslationSaveRequest) => *,
     translationHideErrors: () => *,
     clearSearchFiled: (id: string, value: string) => *,
+    getTranslations: (from: number, to: number) => *,
 };
 
-export default class Home extends React.Component<Props> {
+type State = {
+    from: number,
+    to: number,
+};
+
+export default class Home extends React.Component<Props, State> {
+    state = {
+        from: 0,
+        to: PAGE_SIZE,
+    };
+
+    componentDidMount() {
+        const { from, to } = this.state;
+        this.props.getTranslations(from, to);
+    }
+
     searchHandler = () => {
         const { searchField } = this.props;
+        console.log(searchField);
 
         if (searchField.value.length) {
             this.props.translationGet(searchField.value);
@@ -62,50 +84,41 @@ export default class Home extends React.Component<Props> {
         this.props.clearSearchFiled(searchField.id, '');
     };
 
-    renderForm = () => {
-        const {
-            translationGetLoading,
-            searchField,
-        } = this.props;
-        const isSubmitDisabled = !searchField.value.length || translationGetLoading;
-
-        return (
-            <div className="search-form">
-                <TextField
-                    type="text"
-                    id={searchField.id}
-                    value={searchField.value}
-                    spellcheck={false}
-                    withClearButton
-                    autoFocus
-                    withLoading={translationGetLoading}
-                    className="sf-input"
-                    onSubmit={this.searchHandler}
-                />
-                <ButtonGreen
-                    disabled={isSubmitDisabled}
-                    className="sf-submit"
-                    text="Translate"
-                    onClick={this.searchHandler}
-                />
-            </div>
-        );
-    };
-
     render() {
         const {
+            searchField,
+            translation,
+            translationGetLoading,
+            getError,
             translationSaveLoading,
             translationSaveError,
             translationUpdateLoading,
             translationUpdateError,
+            getListLoading,
+            translationsList,
+            getListError,
         } = this.props;
-        const translationManipulateLoading = translationSaveLoading || translationUpdateLoading;
-        const translationManipulateError = translationSaveError || translationUpdateError;
+        const translationManipulateLoading = translationSaveLoading
+            || translationUpdateLoading
+            || getListLoading;
+        const translationManipulateError = getError
+            || translationSaveError
+            || translationUpdateError
+            || getListError;
+        const isSearchDisabled = !searchField.value.length || translationGetLoading;
 
         return (
             <div className="home-container">
-                {this.renderForm()}
+                <Search
+                    id={searchField.id}
+                    value={searchField.value}
+                    loading={translationGetLoading}
+                    disabled={isSearchDisabled}
+                    onSubmit={this.searchHandler}
+                    onClick={this.searchHandler}
+                />
                 <TranslationView
+                    translation={translation}
                     onClose={this.translationClose}
                     onWordSelect={this.translationSave}
                 />

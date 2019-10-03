@@ -19,6 +19,7 @@ import Overlay, {
 import Loading from './loading';
 import TextField from './text-field';
 import TranslationView from './translation';
+import Search from './search';
 
 export {
     Button,
@@ -38,4 +39,5 @@ export {
     Loading,
     TextField,
     TranslationView,
+    Search,
 };

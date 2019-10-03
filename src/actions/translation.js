@@ -23,6 +23,9 @@ import {
     TRANSLATION_UPDATE_REQUEST,
     TRANSLATION_UPDATE_SUCCESS,
     TRANSLATION_UPDATE_FAILURE,
+    TRANSLATIONS_GET_REQUEST,
+    TRANSLATIONS_GET_SUCCESS,
+    TRANSLATIONS_GET_FAILURE,
     TRANSLATION_HIDE_ERRORS,
 } from '../types/actions/translation';
 import type { StoreState } from '../store/type';
@@ -42,7 +45,10 @@ export const get = (word: string) => (
         successAction: TRANSLATION_SUCCESS,
         failureAction: TRANSLATION_FAILURE,
         action: () => request.get({
-            url: `${apiUrl}/translate?q=${word}`,
+            url: `${apiUrl}/translate`,
+            args: {
+                q: word,
+            },
             headers: {
                 Authorization: process.env.API_KEY,
             },
@@ -65,7 +71,10 @@ export const getImage = (word: string) => (
         successAction: TRANSLATION_IMAGE_SUCCESS,
         failureAction: TRANSLATION_IMAGE_FAILURE,
         action: () => request.get({
-            url: `${apiUrl}/image?q=${word}`,
+            url: `${apiUrl}/image`,
+            args: {
+                q: word,
+            },
             headers: {
                 Authorization: process.env.API_KEY,
             },
@@ -84,7 +93,10 @@ export const removePronunciation = (word: string) => (
         successAction: TRANSLATION_REMOVE_PRONUNCIATION_SUCCESS,
         failureAction: TRANSLATION_REMOVE_PRONUNCIATION_FAILURE,
         action: () => request.delete({
-            url: `${apiUrl}/pronunciation?q=${word}`,
+            url: `${apiUrl}/pronunciation`,
+            args: {
+                q: word,
+            },
             headers: {
                 Authorization: process.env.API_KEY,
             },
@@ -126,6 +138,30 @@ export const update = (data: TranslationSaveRequest) => (
         action: () => request.put({
             url: `${apiUrl}/translate`,
             args: data,
+            headers: {
+                Authorization: process.env.API_KEY,
+            },
+            contentType: 'json',
+        }),
+    });
+};
+
+export const getTranslations = (from: number, to: number) => (
+    dispatch: DispatchAPI<*>,
+    getState: () => StoreState
+): Promise<TranslationResponse> => {
+    const apiUrl = routerSelectors.getApiUrl(getState());
+    return actionCreator({
+        dispatch,
+        requestAction: TRANSLATIONS_GET_REQUEST,
+        successAction: TRANSLATIONS_GET_SUCCESS,
+        failureAction: TRANSLATIONS_GET_FAILURE,
+        action: () => request.get({
+            url: `${apiUrl}/translations`,
+            args: {
+                from,
+                to,
+            },
             headers: {
                 Authorization: process.env.API_KEY,
             },

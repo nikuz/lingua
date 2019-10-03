@@ -22,6 +22,9 @@ export const TRANSLATION_SAVE_FAILURE = 'TRANSLATION_SAVE_FAILURE';
 export const TRANSLATION_UPDATE_REQUEST = 'TRANSLATION_UPDATE_REQUEST';
 export const TRANSLATION_UPDATE_SUCCESS = 'TRANSLATION_UPDATE_SUCCESS';
 export const TRANSLATION_UPDATE_FAILURE = 'TRANSLATION_UPDATE_FAILURE';
+export const TRANSLATIONS_GET_REQUEST = 'TRANSLATIONS_GET_REQUEST';
+export const TRANSLATIONS_GET_SUCCESS = 'TRANSLATIONS_GET_SUCCESS';
+export const TRANSLATIONS_GET_FAILURE = 'TRANSLATIONS_GET_FAILURE';
 export const TRANSLATION_HIDE_ERRORS = 'TRANSLATION_HIDE_ERRORS';
 
 export type TranslationRequestAction = {
@@ -90,6 +93,20 @@ export type TranslationUpdateSuccessAction = {
 
 export type TranslationUpdateFailureAction = {
     +type: 'TRANSLATION_UPDATE_FAILURE',
+    +payload: ErrorObject,
+};
+
+export type TranslationsGetRequestAction = {
+    +type: 'TRANSLATIONS_GET_REQUEST',
+};
+
+export type TranslationsGetSuccessAction = {
+    +type: 'TRANSLATIONS_GET_SUCCESS',
+    +payload: TranslationResponse[],
+};
+
+export type TranslationsGetFailureAction = {
+    +type: 'TRANSLATIONS_GET_FAILURE',
     +payload: ErrorObject,
 };
 

@@ -18,7 +18,7 @@ export type AppReducerState = {
 };
 
 const initialState: AppReducerState = {
-    apiIPLoading: false,
+    apiIPLoading: true,
     apiIP: '',
     apiIPError: null,
 };

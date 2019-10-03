@@ -1,0 +1,15 @@
+.search-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 93%;
+    margin: 0 auto;
+}
+
+.sf-input {
+    flex: 1;
+}
+
+.sf-submit {
+    margin-left: 1vmax;
+}

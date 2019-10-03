@@ -15,6 +15,9 @@ import {
     TRANSLATION_UPDATE_REQUEST,
     TRANSLATION_UPDATE_SUCCESS,
     TRANSLATION_UPDATE_FAILURE,
+    TRANSLATIONS_GET_REQUEST,
+    TRANSLATIONS_GET_SUCCESS,
+    TRANSLATIONS_GET_FAILURE,
     TRANSLATION_HIDE_ERRORS,
 } from '../types/actions/translation';
 import type {
@@ -33,6 +36,9 @@ import type {
     TranslationUpdateRequestAction,
     TranslationUpdateSuccessAction,
     TranslationUpdateFailureAction,
+    TranslationsGetRequestAction,
+    TranslationsGetSuccessAction,
+    TranslationsGetFailureAction,
     TranslationHideErrorsAction,
     ErrorObject,
     TranslationResponse,
@@ -51,6 +57,9 @@ export type TranslationReducerState = {
     saveError: ?ErrorObject,
     updateLoading: boolean,
     updateError: ?ErrorObject,
+    getListLoading: boolean,
+    translationsList: TranslationResponse[],
+    getListError: ?ErrorObject,
 };
 
 const initialState: TranslationReducerState = {
@@ -67,6 +76,9 @@ const initialState: TranslationReducerState = {
     saveError: null,
     updateLoading: false,
     updateError: null,
+    getListLoading: false,
+    translationsList: [],
+    getListError: null,
 };
 
 type Action =
@@ -85,6 +97,9 @@ type Action =
     | TranslationUpdateRequestAction
     | TranslationUpdateSuccessAction
     | TranslationUpdateFailureAction
+    | TranslationsGetRequestAction
+    | TranslationsGetSuccessAction
+    | TranslationsGetFailureAction
     | TranslationHideErrorsAction;
 
 export default function translationReducer(
@@ -191,11 +206,36 @@ export default function translationReducer(
                 updateError: action.payload,
             };
 
+        case TRANSLATIONS_GET_REQUEST:
+            return {
+                ...state,
+                getListLoading: true,
+                getListError: null,
+            };
+
+        case TRANSLATIONS_GET_SUCCESS:
+            return {
+                ...state,
+                getListLoading: false,
+                translationsList: action.payload,
+            };
+
+        case TRANSLATIONS_GET_FAILURE:
+            return {
+                ...state,
+                getListLoading: false,
+                getListError: action.payload,
+            };
+
         case TRANSLATION_HIDE_ERRORS:
             return {
                 ...state,
+                getError: null,
                 updateError: null,
                 saveError: null,
+                imageError: null,
+                pronunciationRemoveError: null,
+                getListError: null,
             };
 
         case TRANSLATION_CLEAR_STATE:

@@ -19,7 +19,6 @@ import './style.css';
 type Props = {
     apiUrl: string,
     translation: TranslationResponse, // eslint-disable-line
-    error: ?ErrorObject,
     imageLoading: boolean,
     image?: string,
     imageError: ?ErrorObject,
@@ -43,7 +42,7 @@ type State = {
     pronunciation?: string,
 };
 
-export default class TranslationView extends React.Component<Props, State> {
+export default class Translation extends React.Component<Props, State> {
     state = {};
 
     static getDerivedStateFromProps(newProps: Props) {
@@ -160,7 +159,6 @@ export default class TranslationView extends React.Component<Props, State> {
     render() {
         const {
             apiUrl,
-            error,
             imageLoading,
             imageError,
         } = this.props;
@@ -179,15 +177,6 @@ export default class TranslationView extends React.Component<Props, State> {
 
         if (this.state.image) {
             image = `${apiUrl}${this.state.image}`;
-        }
-
-        if (error) {
-            return (
-                <OverlayError
-                    message={error.message}
-                    onClick={this.props.clear}
-                />
-            );
         }
 
         if (!word || !highestRelevantTranslation) {
