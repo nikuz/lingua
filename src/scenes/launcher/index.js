@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { appActions } from '../../actions';
 import type { StoreState } from '../../store/type';
-import View from './view';
+import View from './Launcher';
 
 const mapStateToProps = (state: StoreState) => ({
     apiIPLoading: state.app.apiIPLoading,

@@ -7,7 +7,7 @@ import {
 } from '../../actions';
 import { formSelectors } from '../../selectors';
 import type { StoreState } from '../../store/type';
-import View from './view';
+import View from './Home';
 
 const mapStateToProps = (state: StoreState) => ({
     translation: state.translation.translation,
@@ -24,6 +24,9 @@ const mapStateToProps = (state: StoreState) => ({
     translationToDelete: state.translation.translationToDelete,
     deleteLoading: state.translation.deleteLoading,
     deleteError: state.translation.deleteError,
+    searchLoading: state.translation.searchLoading,
+    searchList: state.translation.searchList,
+    searchError: state.translation.searchError,
 });
 
 const mapDispatchToProps = ({
@@ -38,6 +41,7 @@ const mapDispatchToProps = ({
     deleteTranslationFromList: translationActions.deleteTranslation,
     translationClearState: translationActions.clearState,
     translationClearDeleteState: translationActions.clearDeleteState,
+    search: translationActions.search,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(View);

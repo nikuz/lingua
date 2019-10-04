@@ -26,6 +26,9 @@ import {
     TRANSLATION_DELETE_SUCCESS,
     TRANSLATION_DELETE_FAILURE,
     TRANSLATION_CLEAR_DELETE_STATE,
+    TRANSLATION_SEARCH_REQUEST,
+    TRANSLATION_SEARCH_SUCCESS,
+    TRANSLATION_SEARCH_FAILURE,
 } from '../types/actions/translation';
 import type {
     TranslationRequestAction,
@@ -52,6 +55,9 @@ import type {
     TranslationDeleteSuccessAction,
     TranslationDeleteFailureAction,
     TranslationClearDeleteStateAction,
+    TranslationSearchRequestAction,
+    TranslationSearchSuccessAction,
+    TranslationSearchFailureAction,
     ErrorObject,
     TranslationResponse,
     Translation,
@@ -77,6 +83,9 @@ export type TranslationReducerState = {
     translationToDelete: ?Translation,
     deleteLoading: boolean,
     deleteError: ?ErrorObject,
+    searchLoading: boolean,
+    searchList: TranslationsList,
+    searchError: ?ErrorObject,
 };
 
 const initialState: TranslationReducerState = {
@@ -103,6 +112,13 @@ const initialState: TranslationReducerState = {
     translationToDelete: null,
     deleteLoading: false,
     deleteError: null,
+    searchLoading: false,
+    searchList: {
+        from: 0,
+        to: TRANSLATIONS_LIST_PAGE_SIZE,
+        translations: [],
+    },
+    searchError: null,
 };
 
 type Action =
@@ -129,7 +145,10 @@ type Action =
     | TranslationDeleteSuccessAction
     | TranslationDeleteFailureAction
     | TranslationClearDeleteStateAction
-    | TranslationHideErrorsAction;
+    | TranslationHideErrorsAction
+    | TranslationSearchRequestAction
+    | TranslationSearchSuccessAction
+    | TranslationSearchFailureAction;
 
 export default function translationReducer(
     state: TranslationReducerState = initialState,
@@ -142,6 +161,7 @@ export default function translationReducer(
                 getLoading: true,
                 translation: null,
                 getError: null,
+                searchError: null,
             };
 
         case TRANSLATION_SUCCESS:
@@ -318,6 +338,7 @@ export default function translationReducer(
                 pronunciationRemoveError: null,
                 getListError: null,
                 deleteError: null,
+                searchError: null,
             };
 
         case TRANSLATION_CLEAR_STATE:
@@ -325,6 +346,26 @@ export default function translationReducer(
                 ...state,
                 translation: null,
                 image: null,
+            };
+
+        case TRANSLATION_SEARCH_REQUEST:
+            return {
+                ...state,
+                searchLoading: true,
+            };
+
+        case TRANSLATION_SEARCH_SUCCESS:
+            return {
+                ...state,
+                searchLoading: false,
+                searchList: action.payload,
+            };
+
+        case TRANSLATION_SEARCH_FAILURE:
+            return {
+                ...state,
+                searchLoading: false,
+                searchError: action.payload,
             };
 
         default:

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { ButtonGreen } from '../button';
 import TextField from '../text-field';
+import type { TextFieldData } from '../text-field';
 import './style.css';
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
     disabled: boolean,
     onSubmit: () => *,
     onClick: () => *,
+    onChange: (data: TextFieldData) => *,
 };
 
 export default function Search(props: Props) {
@@ -34,6 +36,7 @@ export default function Search(props: Props) {
                 withLoading={loading}
                 className="sf-input"
                 onSubmit={props.onSubmit}
+                onChange={props.onChange}
             />
             <ButtonGreen
                 disabled={disabled}

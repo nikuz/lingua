@@ -43,3 +43,5 @@ export {
     Search,
     TranslationsList,
 };
+
+export type * from './text-field';

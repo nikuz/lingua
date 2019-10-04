@@ -17,6 +17,7 @@ import type {
     TranslationSaveRequest,
     Translation,
 } from '../../types';
+import type { TextFieldData } from '../../components';
 import './style.css';
 
 type Props = {
@@ -34,6 +35,9 @@ type Props = {
     translationToDelete: ?Translation,
     deleteLoading: boolean,
     deleteError: ?ErrorObject,
+    searchLoading: boolean,
+    searchList: TranslationsList,
+    searchError: ?ErrorObject,
     translationGet: (word: string) => *,
     removePronunciation: (word: string) => *,
     translationSave: (data: TranslationSaveRequest) => *,
@@ -45,6 +49,7 @@ type Props = {
     deleteTranslationFromList: (id: number) => *,
     translationClearState: () => *,
     translationClearDeleteState: () => *,
+    search: (value: string, signal: ?AbortSignal) => *,
 };
 
 type State = {
@@ -60,9 +65,21 @@ export default class Home extends React.Component<Props, State> {
         selectedTranslation: null,
     };
 
+    searchHTTPRequestController: ?AbortController;
+
+    searchHTTPRequest: ?Promise<*>;
+
     componentDidMount() {
         const { from, to } = this.state;
         this.props.getTranslations(from, to);
+
+        if (window.AbortController) {
+            this.searchHTTPRequestController = new AbortController();
+        }
+    }
+
+    componentWillUnmount() {
+        this.searchHTTPRequestController = null;
     }
 
     pager = () => (
@@ -100,6 +117,25 @@ export default class Home extends React.Component<Props, State> {
         }
     };
 
+    searchChange = (data: TextFieldData) => {
+        const value = data.value.toString().trim();
+        if (value !== '' && value.length > 1) {
+            if (this.searchHTTPRequest && this.searchHTTPRequestController) {
+                this.searchHTTPRequestController.abort();
+                this.searchHTTPRequestController = new AbortController();
+                this.searchHTTPRequest = null;
+            }
+
+            this.searchHTTPRequest = this.props.search(
+                value,
+                this.searchHTTPRequestController ? this.searchHTTPRequestController.signal : null
+            );
+            this.searchHTTPRequest.then(() => {
+                this.searchHTTPRequest = null;
+            });
+        }
+    };
+
     searchHandler = () => {
         const { searchField } = this.props;
 
@@ -125,13 +161,16 @@ export default class Home extends React.Component<Props, State> {
         const {
             translation,
             searchField,
+            searchList,
         } = this.props;
 
         if (translation && !translation.id) {
             this.props.removePronunciation(translation.word);
         }
 
-        this.props.clearSearchFiled(searchField.id, '');
+        if (!searchList.translations.length) {
+            this.props.clearSearchFiled(searchField.id, '');
+        }
         this.props.translationClearState();
         this.setState({
             selectedTranslation: null,
@@ -153,6 +192,9 @@ export default class Home extends React.Component<Props, State> {
             translationToDelete,
             deleteLoading,
             deleteError,
+            searchLoading,
+            searchList,
+            searchError,
         } = this.props;
         let { translation } = this.props;
         const { selectedTranslation } = this.state;
@@ -164,11 +206,19 @@ export default class Home extends React.Component<Props, State> {
             || translationSaveError
             || translationUpdateError
             || getListError
-            || deleteError;
-        const isSearchDisabled = !searchField.value.length || translationGetLoading;
+            || deleteError
+            || searchError;
+        const isSearchDisabled = !searchField.value.length
+            || translationGetLoading
+            || searchList.translations.length !== 0;
+        let translationsListData = translationsList.translations;
 
         if (!translation && selectedTranslation) {
             translation = selectedTranslation;
+        }
+
+        if (searchField.value.length > 1) {
+            translationsListData = searchList.translations;
         }
 
         return (
@@ -176,8 +226,9 @@ export default class Home extends React.Component<Props, State> {
                 <Search
                     id={searchField.id}
                     value={searchField.value}
-                    loading={translationGetLoading}
+                    loading={translationGetLoading || searchLoading}
                     disabled={isSearchDisabled}
+                    onChange={this.searchChange}
                     onSubmit={this.searchHandler}
                     onClick={this.searchHandler}
                 />
@@ -187,7 +238,7 @@ export default class Home extends React.Component<Props, State> {
                     onWordSelect={this.translationSave}
                 />
                 <TranslationsList
-                    data={translationsList.translations}
+                    data={translationsListData}
                     onScroll={this.pager}
                     onSelect={this.selectTranslationFromList}
                     onDelete={this.props.selectTranslationToDelete}

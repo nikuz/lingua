@@ -160,6 +160,7 @@ export default class TranslationView extends React.Component<Props, State> {
             imageError,
         } = this.props;
         const {
+            id,
             word,
             strangeWord,
             translationWord,
@@ -190,6 +191,7 @@ export default class TranslationView extends React.Component<Props, State> {
                 withCloseButton
                 closeIconClassName="translation-container-close-icon"
                 primary
+                withBlurredBackground
                 onClick={this.close}
             >
                 <div className="translation-head">
@@ -214,7 +216,7 @@ export default class TranslationView extends React.Component<Props, State> {
                                 url={`${apiUrl}${pronunciation}`}
                             />
                         ) }
-                        { !strangeWord && (
+                        { !strangeWord && !id && (
                             <Button
                                 leftIcon="save"
                                 leftIconClassName="th-save-button-icon"

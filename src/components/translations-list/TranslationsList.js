@@ -52,6 +52,14 @@ export default class TranslationsList extends React.Component<Props> {
     render() {
         const { data } = this.props;
 
+        if (!data.length) {
+            return (
+                <p className="translations-list-empty">
+                  No translations found
+                </p>
+            );
+        }
+
         return (
             <ul className="translations-list">
                 {data.map((item) => this.renderListItem(item))}

@@ -22,6 +22,10 @@ body {
     height: 100%;
 }
 
+.blurred #root {
+    filter: blur(1rem);
+}
+
 h1 {
     margin: 0 0 2vmax;
     font-weight: bold;

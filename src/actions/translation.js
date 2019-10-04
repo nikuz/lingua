@@ -32,12 +32,17 @@ import {
     TRANSLATION_DELETE_FAILURE,
     TRANSLATION_CLEAR_DELETE_STATE,
     TRANSLATION_HIDE_ERRORS,
+    TRANSLATION_SEARCH_REQUEST,
+    TRANSLATION_SEARCH_SUCCESS,
+    TRANSLATION_SEARCH_FAILURE,
 } from '../types/actions/translation';
 import type { StoreState } from '../store/type';
 import type {
     TranslationResponse,
     TranslationSaveRequest,
     Translation,
+    TranslationsList,
+    ImageResponse,
 } from '../types';
 
 export const get = (word: string) => (
@@ -56,7 +61,7 @@ export const get = (word: string) => (
                 q: word,
             },
             headers: {
-                Authorization: process.env.API_KEY,
+                Authorization: routerSelectors.getAuthorisation(),
             },
         }),
     });
@@ -69,7 +74,7 @@ export const clearState = () => ({
 export const getImage = (word: string) => (
     dispatch: DispatchAPI<*>,
     getState: () => StoreState
-): Promise<TranslationResponse> => {
+): Promise<ImageResponse> => {
     const apiUrl = routerSelectors.getApiUrl(getState());
     return actionCreator({
         dispatch,
@@ -82,7 +87,7 @@ export const getImage = (word: string) => (
                 q: word,
             },
             headers: {
-                Authorization: process.env.API_KEY,
+                Authorization: routerSelectors.getAuthorisation(),
             },
         }),
     });
@@ -91,7 +96,7 @@ export const getImage = (word: string) => (
 export const removePronunciation = (word: string) => (
     dispatch: DispatchAPI<*>,
     getState: () => StoreState
-): Promise<TranslationResponse> => {
+): Promise<*> => {
     const apiUrl = routerSelectors.getApiUrl(getState());
     return actionCreator({
         dispatch,
@@ -104,7 +109,7 @@ export const removePronunciation = (word: string) => (
                 q: word,
             },
             headers: {
-                Authorization: process.env.API_KEY,
+                Authorization: routerSelectors.getAuthorisation(),
             },
         }),
     });
@@ -124,7 +129,7 @@ export const save = (data: TranslationSaveRequest) => (
             url: `${apiUrl}/translate`,
             args: data,
             headers: {
-                Authorization: process.env.API_KEY,
+                Authorization: routerSelectors.getAuthorisation(),
             },
             contentType: 'json',
         }),
@@ -145,7 +150,7 @@ export const update = (data: TranslationSaveRequest) => (
             url: `${apiUrl}/translate`,
             args: data,
             headers: {
-                Authorization: process.env.API_KEY,
+                Authorization: routerSelectors.getAuthorisation(),
             },
             contentType: 'json',
         }),
@@ -155,7 +160,7 @@ export const update = (data: TranslationSaveRequest) => (
 export const getTranslations = (from: number, to: number) => (
     dispatch: DispatchAPI<*>,
     getState: () => StoreState
-): Promise<TranslationResponse> => {
+): Promise<TranslationsList> => {
     const apiUrl = routerSelectors.getApiUrl(getState());
     return actionCreator({
         dispatch,
@@ -169,7 +174,7 @@ export const getTranslations = (from: number, to: number) => (
                 to,
             },
             headers: {
-                Authorization: process.env.API_KEY,
+                Authorization: routerSelectors.getAuthorisation(),
             },
             contentType: 'json',
         }),
@@ -184,7 +189,7 @@ export const setDeleteState = (translation: Translation) => ({
 export const deleteTranslation = (id: number) => (
     dispatch: DispatchAPI<*>,
     getState: () => StoreState
-): Promise<TranslationResponse> => {
+): Promise<*> => {
     const apiUrl = routerSelectors.getApiUrl(getState());
     return actionCreator({
         dispatch,
@@ -197,7 +202,7 @@ export const deleteTranslation = (id: number) => (
                 id,
             },
             headers: {
-                Authorization: process.env.API_KEY,
+                Authorization: routerSelectors.getAuthorisation(),
             },
             contentType: 'json',
         }),
@@ -211,3 +216,45 @@ export const clearDeleteState = () => ({
 export const translationHideErrors = () => ({
     type: TRANSLATION_HIDE_ERRORS,
 });
+
+export const search = (value: string, signal: ?AbortSignal) => (
+    dispatch: DispatchAPI<*>,
+    getState: () => StoreState
+): Promise<*> => {
+    dispatch({
+        type: TRANSLATION_SEARCH_REQUEST,
+    });
+
+    const apiUrl = routerSelectors.getApiUrl(getState());
+    const requestUrl = `${apiUrl}/translate/search?q=${value}`;
+
+    return fetch(requestUrl, {
+        headers: {
+            Authorization: routerSelectors.getAuthorisation(),
+        },
+        signal,
+    }).then((response) => {
+        if (response.status === 200) {
+            response.text().then((text) => {
+                let result;
+                try {
+                    result = JSON.parse(text);
+                } catch (e) {
+                    result = null;
+                }
+                if (result) {
+                    dispatch({
+                        type: TRANSLATION_SEARCH_SUCCESS,
+                        wsForward: true,
+                        payload: result,
+                    });
+                }
+            });
+        } else {
+            dispatch({
+                type: TRANSLATION_SEARCH_FAILURE,
+                payload: response.status,
+            });
+        }
+    });
+};

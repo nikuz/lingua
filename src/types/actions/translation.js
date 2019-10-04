@@ -33,6 +33,9 @@ export const TRANSLATION_DELETE_SUCCESS = 'TRANSLATION_DELETE_SUCCESS';
 export const TRANSLATION_DELETE_FAILURE = 'TRANSLATION_DELETE_FAILURE';
 export const TRANSLATION_CLEAR_DELETE_STATE = 'TRANSLATION_CLEAR_DELETE_STATE';
 export const TRANSLATION_HIDE_ERRORS = 'TRANSLATION_HIDE_ERRORS';
+export const TRANSLATION_SEARCH_REQUEST = 'TRANSLATION_SEARCH_REQUEST';
+export const TRANSLATION_SEARCH_SUCCESS = 'TRANSLATION_SEARCH_SUCCESS';
+export const TRANSLATION_SEARCH_FAILURE = 'TRANSLATION_SEARCH_FAILURE';
 
 export type TranslationRequestAction = {
     +type: 'TRANSLATION_REQUEST',
@@ -141,4 +144,18 @@ export type TranslationClearDeleteStateAction = {
 
 export type TranslationHideErrorsAction = {
     +type: 'TRANSLATION_HIDE_ERRORS',
+};
+
+export type TranslationSearchRequestAction = {
+    +type: 'TRANSLATION_SEARCH_REQUEST',
+};
+
+export type TranslationSearchSuccessAction = {
+    +type: 'TRANSLATION_SEARCH_SUCCESS',
+    +payload: TranslationsList,
+};
+
+export type TranslationSearchFailureAction = {
+    +type: 'TRANSLATION_SEARCH_FAILURE',
+    +payload: ErrorObject,
 };

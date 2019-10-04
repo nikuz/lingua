@@ -10,6 +10,7 @@ import {
     ButtonRed,
     ButtonTransparent,
 } from '../button';
+import { commonUtils } from '../../utils';
 import './style.css';
 
 const WITH_OVERLAY_CLASSNAME = 'with-overlay';
@@ -29,6 +30,7 @@ type Props = {
     cancelText?: string, //eslint-disable-line
     onAcceptButtonDisabled?: boolean, //eslint-disable-line
     primary?: boolean, //eslint-disable-line
+    withBlurredBackground?: boolean,
     onAcceptClick?: () => *, //eslint-disable-line
     autoHideCallback?: () => *,
     onClick?: () => *,
@@ -40,6 +42,7 @@ export default class Overlay extends React.PureComponent<Props> {
     static defaultProps = {
         withCloseButton: false,
         primary: false,
+        withBlurredBackground: false,
     };
 
     timer: TimeoutID;
@@ -49,6 +52,7 @@ export default class Overlay extends React.PureComponent<Props> {
             autoHideTime,
             autoHideCallback,
             primary,
+            withBlurredBackground,
         } = this.props;
 
         if (autoHideTime && autoHideCallback) {
@@ -59,6 +63,38 @@ export default class Overlay extends React.PureComponent<Props> {
         if (primary && documentElement) {
             documentElement.classList.add(WITH_OVERLAY_CLASSNAME);
         }
+
+        if (withBlurredBackground) {
+            commonUtils.makeBackgroundBlurred(true);
+        }
+
+        document.addEventListener('keydown', this.onKeyDownHandler);
+    }
+
+    componentWillUnmount() {
+        const {
+            onClose,
+            primary,
+            withBlurredBackground,
+        } = this.props;
+        if (this.timer) {
+            clearTimeout(this.timer);
+        }
+
+        const documentElement = document.documentElement;
+        if (primary && documentElement) {
+            documentElement.classList.remove(WITH_OVERLAY_CLASSNAME);
+        }
+
+        if (onClose instanceof Function) {
+            onClose();
+        }
+
+        if (withBlurredBackground) {
+            commonUtils.makeBackgroundBlurred(false);
+        }
+
+        document.removeEventListener('keydown', this.onKeyDownHandler);
     }
 
     containerClickHandler = () => {
@@ -74,24 +110,11 @@ export default class Overlay extends React.PureComponent<Props> {
         }
     };
 
-    componentWillUnmount() {
-        const {
-            onClose,
-            primary,
-        } = this.props;
-        if (this.timer) {
-            clearTimeout(this.timer);
+    onKeyDownHandler = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+            this.containerClickHandler();
         }
-
-        const documentElement = document.documentElement;
-        if (primary && documentElement) {
-            documentElement.classList.remove(WITH_OVERLAY_CLASSNAME);
-        }
-
-        if (onClose instanceof Function) {
-            onClose();
-        }
-    }
+    };
 
     render() {
         const body = document.body;

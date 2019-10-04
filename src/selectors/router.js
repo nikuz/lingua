@@ -26,6 +26,8 @@ export const getApiUrl: (StoreState) => string = createSelector(
     (apiIP: string) => `http://${apiIP}:${appConstants.apiPort}`
 );
 
+export const getAuthorisation = (): string => process.env.API_KEY || '';
+
 export const isOnHomePage: (StoreState) => boolean = createSelector(
     getLocationPath,
     (path) => path === routerConstants.HOME

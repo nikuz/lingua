@@ -2,6 +2,12 @@
     margin-top: var(--search-form-height);
 }
 
+.translations-list-empty {
+    margin-top: var(--search-form-height);
+    text-align: center;
+    font-size: 3vmax;
+}
+
 .tl-item {
     padding: 2vmax 4vmax;
     position: relative;
