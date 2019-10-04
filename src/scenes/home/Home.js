@@ -38,6 +38,9 @@ type Props = {
     searchLoading: boolean,
     searchList: TranslationsList,
     searchError: ?ErrorObject,
+    totalAmountLoading: boolean,
+    totalAmount: number,
+    totalAmountError: ?ErrorObject,
     translationGet: (word: string) => *,
     removePronunciation: (word: string) => *,
     translationSave: (data: TranslationSaveRequest) => *,
@@ -50,6 +53,7 @@ type Props = {
     translationClearState: () => *,
     translationClearDeleteState: () => *,
     search: (value: string, signal: ?AbortSignal) => *,
+    getTotalAmount: () => *,
 };
 
 type State = {
@@ -72,6 +76,7 @@ export default class Home extends React.Component<Props, State> {
     componentDidMount() {
         const { from, to } = this.state;
         this.props.getTranslations(from, to);
+        this.props.getTotalAmount();
 
         if (window.AbortController) {
             this.searchHTTPRequestController = new AbortController();
@@ -108,7 +113,6 @@ export default class Home extends React.Component<Props, State> {
     deleteTranslationFromList = () => {
         const { translationToDelete } = this.props;
         const { to } = this.state;
-        this.props.translationClearDeleteState();
 
         if (translationToDelete) {
             this.props.deleteTranslationFromList(translationToDelete.id).then(() => {
@@ -195,23 +199,27 @@ export default class Home extends React.Component<Props, State> {
             searchLoading,
             searchList,
             searchError,
+            totalAmountLoading,
+            totalAmount,
+            totalAmountError,
         } = this.props;
         let { translation } = this.props;
         const { selectedTranslation } = this.state;
         const translationManipulateLoading = translationSaveLoading
             || translationUpdateLoading
             || getListLoading
-            || deleteLoading;
+            || deleteLoading
+            || totalAmountLoading;
         const translationManipulateError = getError
             || translationSaveError
             || translationUpdateError
             || getListError
             || deleteError
-            || searchError;
-        const isSearchDisabled = !searchField.value.length
-            || translationGetLoading
-            || searchList.translations.length !== 0;
+            || searchError
+            || totalAmountError;
+        const isSearchDisabled = !searchField.value.length || translationGetLoading;
         let translationsListData = translationsList.translations;
+        let total = totalAmount;
 
         if (!translation && selectedTranslation) {
             translation = selectedTranslation;
@@ -219,6 +227,7 @@ export default class Home extends React.Component<Props, State> {
 
         if (searchField.value.length > 1) {
             translationsListData = searchList.translations;
+            total = searchList.translations.length;
         }
 
         return (
@@ -239,6 +248,7 @@ export default class Home extends React.Component<Props, State> {
                 />
                 <TranslationsList
                     data={translationsListData}
+                    total={total}
                     onScroll={this.pager}
                     onSelect={this.selectTranslationFromList}
                     onDelete={this.props.selectTranslationToDelete}

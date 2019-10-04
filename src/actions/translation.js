@@ -17,6 +17,8 @@ import {
     TRANSLATION_IMAGE_REQUEST,
     TRANSLATION_IMAGE_SUCCESS,
     TRANSLATION_IMAGE_FAILURE,
+    TRANSLATION_IMAGE_TOGGLE_IMAGE_PICKER_VISIBILITY,
+    TRANSLATION_IMAGE_SELECT,
     TRANSLATION_SAVE_REQUEST,
     TRANSLATION_SAVE_SUCCESS,
     TRANSLATION_SAVE_FAILURE,
@@ -26,6 +28,9 @@ import {
     TRANSLATIONS_GET_REQUEST,
     TRANSLATIONS_GET_SUCCESS,
     TRANSLATIONS_GET_FAILURE,
+    TRANSLATIONS_GET_AMOUNT_REQUEST,
+    TRANSLATIONS_GET_AMOUNT_SUCCESS,
+    TRANSLATIONS_GET_AMOUNT_FAILURE,
     TRANSLATION_SET_DELETE_STATE,
     TRANSLATION_DELETE_REQUEST,
     TRANSLATION_DELETE_SUCCESS,
@@ -43,6 +48,7 @@ import type {
     Translation,
     TranslationsList,
     ImageResponse,
+    TranslationsListAmountResponse,
 } from '../types';
 
 export const get = (word: string) => (
@@ -92,6 +98,15 @@ export const getImage = (word: string) => (
         }),
     });
 };
+
+export const toggleImagePickerVisibility = () => ({
+    type: TRANSLATION_IMAGE_TOGGLE_IMAGE_PICKER_VISIBILITY,
+});
+
+export const selectImage = (image: string) => ({
+    type: TRANSLATION_IMAGE_SELECT,
+    payload: image,
+});
 
 export const removePronunciation = (word: string) => (
     dispatch: DispatchAPI<*>,
@@ -173,6 +188,26 @@ export const getTranslations = (from: number, to: number) => (
                 from,
                 to,
             },
+            headers: {
+                Authorization: routerSelectors.getAuthorisation(),
+            },
+            contentType: 'json',
+        }),
+    });
+};
+
+export const getTotalAmount = () => (
+    dispatch: DispatchAPI<*>,
+    getState: () => StoreState
+): Promise<TranslationsListAmountResponse> => {
+    const apiUrl = routerSelectors.getApiUrl(getState());
+    return actionCreator({
+        dispatch,
+        requestAction: TRANSLATIONS_GET_AMOUNT_REQUEST,
+        successAction: TRANSLATIONS_GET_AMOUNT_SUCCESS,
+        failureAction: TRANSLATIONS_GET_AMOUNT_FAILURE,
+        action: () => request.get({
+            url: `${apiUrl}/translations/amount`,
             headers: {
                 Authorization: routerSelectors.getAuthorisation(),
             },

@@ -8,6 +8,7 @@ import './style.css';
 
 type Props = {
     data: Translation[],
+    total: number,
     apiUrl: string,
     // onScroll: () => *,
     onSelect: (translation: Translation) => *,
@@ -50,7 +51,10 @@ export default class TranslationsList extends React.Component<Props> {
     };
 
     render() {
-        const { data } = this.props;
+        const {
+            data,
+            total,
+        } = this.props;
 
         if (!data.length) {
             return (
@@ -61,9 +65,16 @@ export default class TranslationsList extends React.Component<Props> {
         }
 
         return (
-            <ul className="translations-list">
-                {data.map((item) => this.renderListItem(item))}
-            </ul>
+            <div className="translations-list-container">
+                <p className="translations-list-total">
+                    Total:
+                    &nbsp;
+                    <strong>{total}</strong>
+                </p>
+                <ul className="translations-list">
+                    {data.map((item) => this.renderListItem(item))}
+                </ul>
+            </div>
         );
     }
 }

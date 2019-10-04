@@ -11,6 +11,8 @@ import {
     TRANSLATION_IMAGE_REQUEST,
     TRANSLATION_IMAGE_SUCCESS,
     TRANSLATION_IMAGE_FAILURE,
+    TRANSLATION_IMAGE_TOGGLE_IMAGE_PICKER_VISIBILITY,
+    TRANSLATION_IMAGE_SELECT,
     TRANSLATION_SAVE_REQUEST,
     TRANSLATION_SAVE_SUCCESS,
     TRANSLATION_SAVE_FAILURE,
@@ -20,6 +22,9 @@ import {
     TRANSLATIONS_GET_REQUEST,
     TRANSLATIONS_GET_SUCCESS,
     TRANSLATIONS_GET_FAILURE,
+    TRANSLATIONS_GET_AMOUNT_REQUEST,
+    TRANSLATIONS_GET_AMOUNT_SUCCESS,
+    TRANSLATIONS_GET_AMOUNT_FAILURE,
     TRANSLATION_HIDE_ERRORS,
     TRANSLATION_SET_DELETE_STATE,
     TRANSLATION_DELETE_REQUEST,
@@ -40,6 +45,8 @@ import type {
     TranslationImageRequestAction,
     TranslationImageSuccessAction,
     TranslationImageFailureAction,
+    TranslationToggleImagePickerVisibilityAction,
+    TranslationSelectImageAction,
     TranslationSaveRequestAction,
     TranslationSaveSuccessAction,
     TranslationSaveFailureAction,
@@ -49,6 +56,9 @@ import type {
     TranslationsGetRequestAction,
     TranslationsGetSuccessAction,
     TranslationsGetFailureAction,
+    TranslationsGetAmountRequestAction,
+    TranslationsGetAmountSuccessAction,
+    TranslationsGetAmountFailureAction,
     TranslationHideErrorsAction,
     TranslationSetDeleteStateAction,
     TranslationDeleteRequestAction,
@@ -72,6 +82,8 @@ export type TranslationReducerState = {
     pronunciationRemoveError: ?ErrorObject,
     imageLoading: boolean,
     image: ?string,
+    imagePickerOpened: boolean,
+    images: string[],
     imageError: ?ErrorObject,
     saveLoading: boolean,
     saveError: ?ErrorObject,
@@ -86,6 +98,9 @@ export type TranslationReducerState = {
     searchLoading: boolean,
     searchList: TranslationsList,
     searchError: ?ErrorObject,
+    totalAmountLoading: boolean,
+    totalAmount: number,
+    totalAmountError: ?ErrorObject,
 };
 
 const initialState: TranslationReducerState = {
@@ -96,6 +111,8 @@ const initialState: TranslationReducerState = {
     pronunciationRemoveError: null,
     imageLoading: false,
     image: null,
+    imagePickerOpened: false,
+    images: [],
     imageError: null,
     saveLoading: false,
     saveData: null,
@@ -119,6 +136,9 @@ const initialState: TranslationReducerState = {
         translations: [],
     },
     searchError: null,
+    totalAmountLoading: false,
+    totalAmount: 0,
+    totalAmountError: null,
 };
 
 type Action =
@@ -131,6 +151,8 @@ type Action =
     | TranslationImageRequestAction
     | TranslationImageSuccessAction
     | TranslationImageFailureAction
+    | TranslationToggleImagePickerVisibilityAction
+    | TranslationSelectImageAction
     | TranslationSaveRequestAction
     | TranslationSaveSuccessAction
     | TranslationSaveFailureAction
@@ -140,6 +162,9 @@ type Action =
     | TranslationsGetRequestAction
     | TranslationsGetSuccessAction
     | TranslationsGetFailureAction
+    | TranslationsGetAmountRequestAction
+    | TranslationsGetAmountSuccessAction
+    | TranslationsGetAmountFailureAction
     | TranslationSetDeleteStateAction
     | TranslationDeleteRequestAction
     | TranslationDeleteSuccessAction
@@ -203,7 +228,8 @@ export default function translationReducer(
             return {
                 ...state,
                 imageLoading: false,
-                image: action.payload.image,
+                image: action.payload.images[0],
+                images: action.payload.images,
             };
 
         case TRANSLATION_IMAGE_FAILURE:
@@ -211,6 +237,18 @@ export default function translationReducer(
                 ...state,
                 imageLoading: false,
                 imageError: action.payload,
+            };
+
+        case TRANSLATION_IMAGE_TOGGLE_IMAGE_PICKER_VISIBILITY:
+            return {
+                ...state,
+                imagePickerOpened: !state.imagePickerOpened,
+            };
+
+        case TRANSLATION_IMAGE_SELECT:
+            return {
+                ...state,
+                image: action.payload,
             };
 
         case TRANSLATION_SAVE_REQUEST:
@@ -296,6 +334,26 @@ export default function translationReducer(
                 getListError: action.payload,
             };
 
+        case TRANSLATIONS_GET_AMOUNT_REQUEST:
+            return {
+                ...state,
+                totalAmountLoading: true,
+            };
+
+        case TRANSLATIONS_GET_AMOUNT_SUCCESS:
+            return {
+                ...state,
+                totalAmountLoading: false,
+                totalAmount: action.payload.value,
+            };
+
+        case TRANSLATIONS_GET_AMOUNT_FAILURE:
+            return {
+                ...state,
+                totalAmountLoading: false,
+                totalAmountError: action.payload,
+            };
+
         case TRANSLATION_SET_DELETE_STATE:
             return {
                 ...state,
@@ -309,17 +367,49 @@ export default function translationReducer(
                 deleteError: null,
             };
 
-        case TRANSLATION_DELETE_SUCCESS:
+        case TRANSLATION_DELETE_SUCCESS: {
+            const deletedTranslation = state.translationToDelete;
+            const translationsList = state.translationsList.translations.slice(0);
+            const searchList = state.searchList.translations.slice(0);
+
+            if (deletedTranslation) {
+                const inTranslationsList = translationsList.findIndex((item) => (
+                    item.word === deletedTranslation.word
+                ));
+                const inSearchList = searchList.findIndex((item) => (
+                    item.word === deletedTranslation.word
+                ));
+
+                if (inTranslationsList !== -1) {
+                    translationsList.splice(inTranslationsList, 1);
+                }
+
+                if (inSearchList !== -1) {
+                    searchList.splice(inSearchList, 1);
+                }
+            }
+
             return {
                 ...state,
                 deleteLoading: false,
+                translationToDelete: null,
+                translationsList: {
+                    ...state.translationsList,
+                    translations: translationsList,
+                },
+                searchList: {
+                    ...state.searchList,
+                    translations: searchList,
+                },
             };
+        }
 
         case TRANSLATION_DELETE_FAILURE:
             return {
                 ...state,
                 deleteLoading: false,
                 deleteError: action.payload,
+                translationToDelete: null,
             };
 
         case TRANSLATION_CLEAR_DELETE_STATE:
@@ -346,6 +436,7 @@ export default function translationReducer(
                 ...state,
                 translation: null,
                 image: null,
+                images: [],
             };
 
         case TRANSLATION_SEARCH_REQUEST:

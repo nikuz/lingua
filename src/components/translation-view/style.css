@@ -70,7 +70,24 @@
     position: absolute;
     left: 50%;
     bottom: 2vmax;
+    display: flex;
+    align-items: center;
     transform: translateX(-50%);
+}
+
+.thic-image-expand-button {
+    margin-left: 2vmax;
+}
+
+.translation-image-picker-overlay-content {
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    box-shadow: 0 1.6vmax 3.2vmax rgba(0, 0, 0, .5);
+}
+
+.tipo-button {
+
 }
 
 .thic-error {

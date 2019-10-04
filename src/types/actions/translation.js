@@ -6,6 +6,7 @@ import type {
     ImageResponse,
     TranslationsList,
     Translation,
+    TranslationsListAmountResponse,
 } from '../translation';
 
 export const TRANSLATION_REQUEST = 'TRANSLATION_REQUEST';
@@ -18,6 +19,8 @@ export const TRANSLATION_REMOVE_PRONUNCIATION_FAILURE = 'TRANSLATION_REMOVE_PRON
 export const TRANSLATION_IMAGE_REQUEST = 'TRANSLATION_IMAGE_REQUEST';
 export const TRANSLATION_IMAGE_SUCCESS = 'TRANSLATION_IMAGE_SUCCESS';
 export const TRANSLATION_IMAGE_FAILURE = 'TRANSLATION_IMAGE_FAILURE';
+export const TRANSLATION_IMAGE_TOGGLE_IMAGE_PICKER_VISIBILITY = 'TRANSLATION_IMAGE_TOGGLE_IMAGE_PICKER_VISIBILITY';
+export const TRANSLATION_IMAGE_SELECT = 'TRANSLATION_IMAGE_SELECT';
 export const TRANSLATION_SAVE_REQUEST = 'TRANSLATION_SAVE_REQUEST';
 export const TRANSLATION_SAVE_SUCCESS = 'TRANSLATION_SAVE_SUCCESS';
 export const TRANSLATION_SAVE_FAILURE = 'TRANSLATION_SAVE_FAILURE';
@@ -27,6 +30,9 @@ export const TRANSLATION_UPDATE_FAILURE = 'TRANSLATION_UPDATE_FAILURE';
 export const TRANSLATIONS_GET_REQUEST = 'TRANSLATIONS_GET_REQUEST';
 export const TRANSLATIONS_GET_SUCCESS = 'TRANSLATIONS_GET_SUCCESS';
 export const TRANSLATIONS_GET_FAILURE = 'TRANSLATIONS_GET_FAILURE';
+export const TRANSLATIONS_GET_AMOUNT_REQUEST = 'TRANSLATIONS_GET_AMOUNT_REQUEST';
+export const TRANSLATIONS_GET_AMOUNT_SUCCESS = 'TRANSLATIONS_GET_AMOUNT_SUCCESS';
+export const TRANSLATIONS_GET_AMOUNT_FAILURE = 'TRANSLATIONS_GET_AMOUNT_FAILURE';
 export const TRANSLATION_SET_DELETE_STATE = 'TRANSLATION_SET_DELETE_STATE';
 export const TRANSLATION_DELETE_REQUEST = 'TRANSLATION_DELETE_REQUEST';
 export const TRANSLATION_DELETE_SUCCESS = 'TRANSLATION_DELETE_SUCCESS';
@@ -78,6 +84,15 @@ export type TranslationImageFailureAction = {
     +payload: ErrorObject,
 };
 
+export type TranslationToggleImagePickerVisibilityAction = {
+    +type: 'TRANSLATION_IMAGE_TOGGLE_IMAGE_PICKER_VISIBILITY',
+};
+
+export type TranslationSelectImageAction = {
+    +type: 'TRANSLATION_IMAGE_SELECT',
+    +payload: string,
+};
+
 export type TranslationSaveRequestAction = {
     +type: 'TRANSLATION_SAVE_REQUEST',
 };
@@ -117,6 +132,20 @@ export type TranslationsGetSuccessAction = {
 
 export type TranslationsGetFailureAction = {
     +type: 'TRANSLATIONS_GET_FAILURE',
+    +payload: ErrorObject,
+};
+
+export type TranslationsGetAmountRequestAction = {
+    +type: 'TRANSLATIONS_GET_AMOUNT_REQUEST',
+};
+
+export type TranslationsGetAmountSuccessAction = {
+    +type: 'TRANSLATIONS_GET_AMOUNT_SUCCESS',
+    +payload: TranslationsListAmountResponse,
+};
+
+export type TranslationsGetAmountFailureAction = {
+    +type: 'TRANSLATIONS_GET_AMOUNT_FAILURE',
     +payload: ErrorObject,
 };
 

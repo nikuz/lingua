@@ -11,7 +11,7 @@ export type TranslationResponse = {
 };
 
 export type ImageResponse = {
-    image: string,
+    images: string[],
 };
 
 export type TranslationSaveRequest = {
@@ -37,4 +37,8 @@ export type TranslationsList = {
     from: number,
     to: number,
     translations: Translation[],
+};
+
+export type TranslationsListAmountResponse = {
+    value: number,
 };

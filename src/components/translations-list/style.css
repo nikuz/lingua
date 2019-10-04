@@ -1,4 +1,4 @@
-.translations-list {
+.translations-list-container {
     margin-top: var(--search-form-height);
 }
 
@@ -6,6 +6,11 @@
     margin-top: var(--search-form-height);
     text-align: center;
     font-size: 3vmax;
+}
+
+.translations-list-total {
+    padding-left: 4vmax;
+    margin-bottom: 0;
 }
 
 .tl-item {

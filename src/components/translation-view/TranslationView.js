@@ -14,6 +14,7 @@ import Pronunciation from '../pronunciation';
 import OtherTranslations from './OtherTranslations';
 import Definitions from './Definitions';
 import Examples from './Examples';
+import ImagePicker from './ImagePicker';
 import './style.css';
 
 type Props = {
@@ -21,10 +22,14 @@ type Props = {
     translation: TranslationResponse, // eslint-disable-line
     imageLoading: boolean,
     image?: string,
+    images: string[],
+    imagePickerOpened: boolean,
     imageError: ?ErrorObject,
     getImage: (word: string) => *,
     onClose: () => *,
     onWordSelect: (data: TranslationSaveRequest) => *,
+    selectImage: (image: string) => *,
+    toggleImagePickerVisibility: () => *,
 };
 
 type State = {
@@ -145,6 +150,11 @@ export default class TranslationView extends React.Component<Props, State> {
         }
     };
 
+    selectImage = (image: string) => {
+        this.props.selectImage(image);
+        this.props.toggleImagePickerVisibility();
+    };
+
     close = () => {
         const { onClose } = this.props;
 
@@ -157,7 +167,9 @@ export default class TranslationView extends React.Component<Props, State> {
         const {
             apiUrl,
             imageLoading,
+            images,
             imageError,
+            imagePickerOpened,
         } = this.props;
         const {
             id,
@@ -240,6 +252,13 @@ export default class TranslationView extends React.Component<Props, State> {
                                 className="thic-image"
                             />
                         ) }
+                        { !id && images.length > 1 && (
+                            <Button
+                                leftIcon="expand"
+                                className="thic-image-expand-button"
+                                onClick={this.props.toggleImagePickerVisibility}
+                            />
+                        ) }
                     </div>
                 </div>
                 <OtherTranslations
@@ -255,6 +274,12 @@ export default class TranslationView extends React.Component<Props, State> {
                 <Examples
                     word={word}
                     data={examples}
+                />
+                <ImagePicker
+                    images={images}
+                    opened={imagePickerOpened}
+                    onClose={this.props.toggleImagePickerVisibility}
+                    onSelect={this.selectImage}
                 />
             </Overlay>
         );
