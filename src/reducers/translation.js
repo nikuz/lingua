@@ -21,6 +21,11 @@ import {
     TRANSLATIONS_GET_SUCCESS,
     TRANSLATIONS_GET_FAILURE,
     TRANSLATION_HIDE_ERRORS,
+    TRANSLATION_SET_DELETE_STATE,
+    TRANSLATION_DELETE_REQUEST,
+    TRANSLATION_DELETE_SUCCESS,
+    TRANSLATION_DELETE_FAILURE,
+    TRANSLATION_CLEAR_DELETE_STATE,
 } from '../types/actions/translation';
 import type {
     TranslationRequestAction,
@@ -42,8 +47,14 @@ import type {
     TranslationsGetSuccessAction,
     TranslationsGetFailureAction,
     TranslationHideErrorsAction,
+    TranslationSetDeleteStateAction,
+    TranslationDeleteRequestAction,
+    TranslationDeleteSuccessAction,
+    TranslationDeleteFailureAction,
+    TranslationClearDeleteStateAction,
     ErrorObject,
     TranslationResponse,
+    Translation,
     TranslationsList,
 } from '../types';
 
@@ -63,6 +74,9 @@ export type TranslationReducerState = {
     getListLoading: boolean,
     translationsList: TranslationsList,
     getListError: ?ErrorObject,
+    translationToDelete: ?Translation,
+    deleteLoading: boolean,
+    deleteError: ?ErrorObject,
 };
 
 const initialState: TranslationReducerState = {
@@ -86,6 +100,9 @@ const initialState: TranslationReducerState = {
         translations: [],
     },
     getListError: null,
+    translationToDelete: null,
+    deleteLoading: false,
+    deleteError: null,
 };
 
 type Action =
@@ -107,6 +124,11 @@ type Action =
     | TranslationsGetRequestAction
     | TranslationsGetSuccessAction
     | TranslationsGetFailureAction
+    | TranslationSetDeleteStateAction
+    | TranslationDeleteRequestAction
+    | TranslationDeleteSuccessAction
+    | TranslationDeleteFailureAction
+    | TranslationClearDeleteStateAction
     | TranslationHideErrorsAction;
 
 export default function translationReducer(
@@ -234,7 +256,7 @@ export default function translationReducer(
 
             translations.splice(
                 newList.from,
-                newList.translations.length,
+                newList.to - newList.from,
                 ...newList.translations
             );
 
@@ -254,6 +276,38 @@ export default function translationReducer(
                 getListError: action.payload,
             };
 
+        case TRANSLATION_SET_DELETE_STATE:
+            return {
+                ...state,
+                translationToDelete: action.payload,
+            };
+
+        case TRANSLATION_DELETE_REQUEST:
+            return {
+                ...state,
+                deleteLoading: false,
+                deleteError: null,
+            };
+
+        case TRANSLATION_DELETE_SUCCESS:
+            return {
+                ...state,
+                deleteLoading: false,
+            };
+
+        case TRANSLATION_DELETE_FAILURE:
+            return {
+                ...state,
+                deleteLoading: false,
+                deleteError: action.payload,
+            };
+
+        case TRANSLATION_CLEAR_DELETE_STATE:
+            return {
+                ...state,
+                translationToDelete: null,
+            };
+
         case TRANSLATION_HIDE_ERRORS:
             return {
                 ...state,
@@ -263,6 +317,7 @@ export default function translationReducer(
                 imageError: null,
                 pronunciationRemoveError: null,
                 getListError: null,
+                deleteError: null,
             };
 
         case TRANSLATION_CLEAR_STATE:

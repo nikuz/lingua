@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import type { Translation } from '../../types';
+import { ButtonRed } from '../button';
 import Pronunciation from '../pronunciation';
 import './style.css';
 
@@ -10,6 +11,7 @@ type Props = {
     apiUrl: string,
     // onScroll: () => *,
     onSelect: (translation: Translation) => *,
+    onDelete: (translation: Translation) => *,
 };
 
 export default class TranslationsList extends React.Component<Props> {
@@ -33,6 +35,12 @@ export default class TranslationsList extends React.Component<Props> {
                         <img src={`${apiUrl}${item.image}`} className="tli-image" />
                     </div>
                 ) }
+                <ButtonRed
+                    leftIcon="delete"
+                    leftIconClassName="tli-delete-icon"
+                    className="tli-delete"
+                    onClick={() => this.props.onDelete(item)}
+                />
                 <div
                     className="blocker"
                     onClick={() => this.props.onSelect(item)}

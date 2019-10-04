@@ -31,7 +31,8 @@ html.with-overlay {
 }
 
 .overlay-message-content,
-.overlay-error-content {
+.overlay-error-content,
+.overlay-confirm-content {
     margin: 0 auto;
     display: flex;
     width: 45vmax;
@@ -75,8 +76,7 @@ html.with-overlay {
 }
 
 .overlay-confirm-content {
-    width: 75vmax;
-    padding: 5vmax 5vmax 2vmax;
+    display: block;
 }
 
 .overlay-confirm-icon-wrapper {

@@ -9,3 +9,4 @@ import './warning.svg';
 import './stop.svg';
 import './save.svg';
 import './broken-image.svg';
+import './delete.svg';

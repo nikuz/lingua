@@ -26,12 +26,18 @@ import {
     TRANSLATIONS_GET_REQUEST,
     TRANSLATIONS_GET_SUCCESS,
     TRANSLATIONS_GET_FAILURE,
+    TRANSLATION_SET_DELETE_STATE,
+    TRANSLATION_DELETE_REQUEST,
+    TRANSLATION_DELETE_SUCCESS,
+    TRANSLATION_DELETE_FAILURE,
+    TRANSLATION_CLEAR_DELETE_STATE,
     TRANSLATION_HIDE_ERRORS,
 } from '../types/actions/translation';
 import type { StoreState } from '../store/type';
 import type {
     TranslationResponse,
     TranslationSaveRequest,
+    Translation,
 } from '../types';
 
 export const get = (word: string) => (
@@ -169,6 +175,38 @@ export const getTranslations = (from: number, to: number) => (
         }),
     });
 };
+
+export const setDeleteState = (translation: Translation) => ({
+    type: TRANSLATION_SET_DELETE_STATE,
+    payload: translation,
+});
+
+export const deleteTranslation = (id: number) => (
+    dispatch: DispatchAPI<*>,
+    getState: () => StoreState
+): Promise<TranslationResponse> => {
+    const apiUrl = routerSelectors.getApiUrl(getState());
+    return actionCreator({
+        dispatch,
+        requestAction: TRANSLATION_DELETE_REQUEST,
+        successAction: TRANSLATION_DELETE_SUCCESS,
+        failureAction: TRANSLATION_DELETE_FAILURE,
+        action: () => request.delete({
+            url: `${apiUrl}/translate`,
+            args: {
+                id,
+            },
+            headers: {
+                Authorization: process.env.API_KEY,
+            },
+            contentType: 'json',
+        }),
+    });
+};
+
+export const clearDeleteState = () => ({
+    type: TRANSLATION_CLEAR_DELETE_STATE,
+});
 
 export const translationHideErrors = () => ({
     type: TRANSLATION_HIDE_ERRORS,

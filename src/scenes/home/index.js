@@ -21,6 +21,9 @@ const mapStateToProps = (state: StoreState) => ({
     getListLoading: state.translation.getListLoading,
     translationsList: state.translation.translationsList,
     getListError: state.translation.getListError,
+    translationToDelete: state.translation.translationToDelete,
+    deleteLoading: state.translation.deleteLoading,
+    deleteError: state.translation.deleteError,
 });
 
 const mapDispatchToProps = ({
@@ -31,7 +34,10 @@ const mapDispatchToProps = ({
     translationHideErrors: translationActions.translationHideErrors,
     clearSearchFiled: formActions.fieldValueChange,
     getTranslations: translationActions.getTranslations,
+    selectTranslationToDelete: translationActions.setDeleteState,
+    deleteTranslationFromList: translationActions.deleteTranslation,
     translationClearState: translationActions.clearState,
+    translationClearDeleteState: translationActions.clearDeleteState,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(View);

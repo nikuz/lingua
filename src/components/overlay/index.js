@@ -7,6 +7,7 @@ import Icon from '../icon';
 import Loading from '../loading';
 import {
     ButtonOrange,
+    ButtonRed,
     ButtonTransparent,
 } from '../button';
 import './style.css';
@@ -230,7 +231,7 @@ export const OverlayConfirm = (props: Props) => {
                 </p>
             )}
             {props.children}
-            <ButtonOrange
+            <ButtonRed
                 text={props.acceptText}
                 className="form-submit-button"
                 disabled={props.onAcceptButtonDisabled || false}

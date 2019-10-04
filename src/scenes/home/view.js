@@ -5,6 +5,7 @@ import {
     TranslationView,
     OverlayLoading,
     OverlayError,
+    OverlayConfirm,
     Search,
     TranslationsList,
 } from '../../components';
@@ -30,6 +31,9 @@ type Props = {
     getListLoading: boolean,
     translationsList: TranslationsList,
     getListError: ?ErrorObject,
+    translationToDelete: ?Translation,
+    deleteLoading: boolean,
+    deleteError: ?ErrorObject,
     translationGet: (word: string) => *,
     removePronunciation: (word: string) => *,
     translationSave: (data: TranslationSaveRequest) => *,
@@ -37,7 +41,10 @@ type Props = {
     translationHideErrors: () => *,
     clearSearchFiled: (id: string, value: string) => *,
     getTranslations: (from: number, to: number) => *,
+    selectTranslationToDelete: (translation: Translation) => *,
+    deleteTranslationFromList: (id: number) => *,
     translationClearState: () => *,
+    translationClearDeleteState: () => *,
 };
 
 type State = {
@@ -81,9 +88,20 @@ export default class Home extends React.Component<Props, State> {
         });
     };
 
+    deleteTranslationFromList = () => {
+        const { translationToDelete } = this.props;
+        const { to } = this.state;
+        this.props.translationClearDeleteState();
+
+        if (translationToDelete) {
+            this.props.deleteTranslationFromList(translationToDelete.id).then(() => {
+                this.props.getTranslations(0, to);
+            });
+        }
+    };
+
     searchHandler = () => {
         const { searchField } = this.props;
-        console.log(searchField);
 
         if (searchField.value.length) {
             this.props.translationGet(searchField.value);
@@ -91,14 +109,14 @@ export default class Home extends React.Component<Props, State> {
     };
 
     translationSave = (data: TranslationSaveRequest) => {
-        const { from, to } = this.state;
+        const { to } = this.state;
         let saveMethod = this.props.translationSave;
         if (data.id) {
             saveMethod = this.props.translationUpdate;
         }
 
         saveMethod(data).then(() => {
-            this.props.getTranslations(from, to);
+            this.props.getTranslations(0, to);
             this.translationClose();
         });
     };
@@ -132,16 +150,21 @@ export default class Home extends React.Component<Props, State> {
             getListLoading,
             translationsList,
             getListError,
+            translationToDelete,
+            deleteLoading,
+            deleteError,
         } = this.props;
         let { translation } = this.props;
         const { selectedTranslation } = this.state;
         const translationManipulateLoading = translationSaveLoading
             || translationUpdateLoading
-            || getListLoading;
+            || getListLoading
+            || deleteLoading;
         const translationManipulateError = getError
             || translationSaveError
             || translationUpdateError
-            || getListError;
+            || getListError
+            || deleteError;
         const isSearchDisabled = !searchField.value.length || translationGetLoading;
 
         if (!translation && selectedTranslation) {
@@ -167,12 +190,22 @@ export default class Home extends React.Component<Props, State> {
                     data={translationsList.translations}
                     onScroll={this.pager}
                     onSelect={this.selectTranslationFromList}
+                    onDelete={this.props.selectTranslationToDelete}
                 />
                 { translationManipulateLoading && <OverlayLoading /> }
                 { translationManipulateError && (
                     <OverlayError
                         message={translationManipulateError.message}
                         onClick={this.props.translationHideErrors}
+                    />
+                ) }
+                { translationToDelete && (
+                    <OverlayConfirm
+                        message={`Do you rally want to delete "${translationToDelete.word}" word?`}
+                        acceptText="Yes"
+                        cancelText="Cancel"
+                        onAcceptClick={this.deleteTranslationFromList}
+                        onCancelClick={this.props.translationClearDeleteState}
                     />
                 ) }
             </div>

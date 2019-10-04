@@ -5,6 +5,7 @@ import type {
     TranslationResponse,
     ImageResponse,
     TranslationsList,
+    Translation,
 } from '../translation';
 
 export const TRANSLATION_REQUEST = 'TRANSLATION_REQUEST';
@@ -26,6 +27,11 @@ export const TRANSLATION_UPDATE_FAILURE = 'TRANSLATION_UPDATE_FAILURE';
 export const TRANSLATIONS_GET_REQUEST = 'TRANSLATIONS_GET_REQUEST';
 export const TRANSLATIONS_GET_SUCCESS = 'TRANSLATIONS_GET_SUCCESS';
 export const TRANSLATIONS_GET_FAILURE = 'TRANSLATIONS_GET_FAILURE';
+export const TRANSLATION_SET_DELETE_STATE = 'TRANSLATION_SET_DELETE_STATE';
+export const TRANSLATION_DELETE_REQUEST = 'TRANSLATION_DELETE_REQUEST';
+export const TRANSLATION_DELETE_SUCCESS = 'TRANSLATION_DELETE_SUCCESS';
+export const TRANSLATION_DELETE_FAILURE = 'TRANSLATION_DELETE_FAILURE';
+export const TRANSLATION_CLEAR_DELETE_STATE = 'TRANSLATION_CLEAR_DELETE_STATE';
 export const TRANSLATION_HIDE_ERRORS = 'TRANSLATION_HIDE_ERRORS';
 
 export type TranslationRequestAction = {
@@ -109,6 +115,28 @@ export type TranslationsGetSuccessAction = {
 export type TranslationsGetFailureAction = {
     +type: 'TRANSLATIONS_GET_FAILURE',
     +payload: ErrorObject,
+};
+
+export type TranslationSetDeleteStateAction = {
+    +type: 'TRANSLATION_SET_DELETE_STATE',
+    +payload: Translation,
+};
+
+export type TranslationDeleteRequestAction = {
+    +type: 'TRANSLATION_DELETE_REQUEST',
+};
+
+export type TranslationDeleteSuccessAction = {
+    +type: 'TRANSLATION_DELETE_SUCCESS',
+};
+
+export type TranslationDeleteFailureAction = {
+    +type: 'TRANSLATION_DELETE_FAILURE',
+    +payload: ErrorObject,
+};
+
+export type TranslationClearDeleteStateAction = {
+    +type: 'TRANSLATION_CLEAR_DELETE_STATE',
 };
 
 export type TranslationHideErrorsAction = {
