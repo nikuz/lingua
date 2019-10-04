@@ -124,6 +124,7 @@ export default class Home extends React.Component<Props, State> {
         if (translationToDelete) {
             this.props.deleteTranslationFromList(translationToDelete.id).then(() => {
                 this.props.getTranslations(0, to);
+                this.props.getTotalAmount();
             });
         }
     };
