@@ -6,6 +6,7 @@ import './style.css';
 
 type Props = {
     url: string,
+    autoplay?: boolean,
     className?: string | { [className: string]: * },
 }
 
@@ -14,6 +15,10 @@ type State = {
 };
 
 export default class Pronunciation extends React.Component<Props, State> {
+    static defaultProps = {
+        autoplay: false,
+    };
+
     state = {
         playStarted: false,
     };
@@ -21,7 +26,9 @@ export default class Pronunciation extends React.Component<Props, State> {
     pronunciationEl: ?HTMLAudioElement;
 
     componentDidMount() {
-        this.play();
+        if (this.props.autoplay) {
+            this.play();
+        }
     }
 
     play = () => {

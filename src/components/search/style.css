@@ -1,9 +1,17 @@
 .search-form {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     display: flex;
+    height: var(--search-form-height);
     align-items: center;
     justify-content: center;
-    width: 93%;
+    padding: 0 3.5vmax;
     margin: 0 auto;
+    background: var(--text-color);
+    box-shadow: 0 0.2vmax 1vmax var(--text-color-dark-3);
+    z-index: 100;
 }
 
 .sf-input {

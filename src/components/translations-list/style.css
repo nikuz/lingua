@@ -1,0 +1,41 @@
+.translations-list {
+    margin-top: var(--search-form-height);
+}
+
+.tl-item {
+    padding: 2vmax 4vmax;
+    position: relative;
+    display: flex;
+}
+
+.tl-item:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border-bottom: 0.1vmax solid var(--gray-dark);
+}
+
+.tli-pronunciation {
+    margin-right: 2vmax;
+    z-index: 15;
+}
+
+.tli-content {
+    flex: 1;
+}
+
+.tli-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 6vmax;
+    height: 6vmax;
+    text-align: center;
+}
+
+.tli-image {
+    max-width:100%;
+    max-height:100%;
+}

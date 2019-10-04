@@ -6,16 +6,17 @@ import {
     OverlayLoading,
     OverlayError,
     Search,
+    TranslationsList,
 } from '../../components';
+import { TRANSLATIONS_LIST_PAGE_SIZE } from '../../constants/translations';
 import type {
     ErrorObject,
     FormFieldString,
     TranslationResponse,
     TranslationSaveRequest,
+    Translation,
 } from '../../types';
 import './style.css';
-
-const PAGE_SIZE = 20;
 
 type Props = {
     translation: ?TranslationResponse,
@@ -27,32 +28,58 @@ type Props = {
     translationUpdateLoading: boolean,
     translationUpdateError: ?ErrorObject,
     getListLoading: boolean,
-    translationsList: TranslationResponse[],
+    translationsList: TranslationsList,
     getListError: ?ErrorObject,
     translationGet: (word: string) => *,
     removePronunciation: (word: string) => *,
     translationSave: (data: TranslationSaveRequest) => *,
-    translationUpdate: (data: TranslationSaveRequest) => *,
+    translationUpdate: (data: TranslationSaveRequest) => Promise<*>,
     translationHideErrors: () => *,
     clearSearchFiled: (id: string, value: string) => *,
     getTranslations: (from: number, to: number) => *,
+    translationClearState: () => *,
 };
 
 type State = {
     from: number,
     to: number,
+    selectedTranslation: ?Translation,
 };
 
 export default class Home extends React.Component<Props, State> {
     state = {
         from: 0,
-        to: PAGE_SIZE,
+        to: TRANSLATIONS_LIST_PAGE_SIZE,
+        selectedTranslation: null,
     };
 
     componentDidMount() {
         const { from, to } = this.state;
         this.props.getTranslations(from, to);
     }
+
+    pager = () => (
+        this.setState((prevState) => {
+            const from = prevState.from + TRANSLATIONS_LIST_PAGE_SIZE;
+            const to = prevState.to + TRANSLATIONS_LIST_PAGE_SIZE;
+
+            this.props.getTranslations(
+                from,
+                to
+            );
+
+            return {
+                from,
+                to,
+            };
+        })
+    );
+
+    selectTranslationFromList = (translation: Translation) => {
+        this.setState({
+            selectedTranslation: translation,
+        });
+    };
 
     searchHandler = () => {
         const { searchField } = this.props;
@@ -64,11 +91,16 @@ export default class Home extends React.Component<Props, State> {
     };
 
     translationSave = (data: TranslationSaveRequest) => {
+        const { from, to } = this.state;
+        let saveMethod = this.props.translationSave;
         if (data.id) {
-            this.props.translationUpdate(data);
-        } else {
-            this.props.translationSave(data);
+            saveMethod = this.props.translationUpdate;
         }
+
+        saveMethod(data).then(() => {
+            this.props.getTranslations(from, to);
+            this.translationClose();
+        });
     };
 
     translationClose = () => {
@@ -82,12 +114,15 @@ export default class Home extends React.Component<Props, State> {
         }
 
         this.props.clearSearchFiled(searchField.id, '');
+        this.props.translationClearState();
+        this.setState({
+            selectedTranslation: null,
+        });
     };
 
     render() {
         const {
             searchField,
-            translation,
             translationGetLoading,
             getError,
             translationSaveLoading,
@@ -98,6 +133,8 @@ export default class Home extends React.Component<Props, State> {
             translationsList,
             getListError,
         } = this.props;
+        let { translation } = this.props;
+        const { selectedTranslation } = this.state;
         const translationManipulateLoading = translationSaveLoading
             || translationUpdateLoading
             || getListLoading;
@@ -106,6 +143,10 @@ export default class Home extends React.Component<Props, State> {
             || translationUpdateError
             || getListError;
         const isSearchDisabled = !searchField.value.length || translationGetLoading;
+
+        if (!translation && selectedTranslation) {
+            translation = selectedTranslation;
+        }
 
         return (
             <div className="home-container">
@@ -121,6 +162,11 @@ export default class Home extends React.Component<Props, State> {
                     translation={translation}
                     onClose={this.translationClose}
                     onWordSelect={this.translationSave}
+                />
+                <TranslationsList
+                    data={translationsList.translations}
+                    onScroll={this.pager}
+                    onSelect={this.selectTranslationFromList}
                 />
                 { translationManipulateLoading && <OverlayLoading /> }
                 { translationManipulateError && (

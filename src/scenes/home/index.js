@@ -31,6 +31,7 @@ const mapDispatchToProps = ({
     translationHideErrors: translationActions.translationHideErrors,
     clearSearchFiled: formActions.fieldValueChange,
     getTranslations: translationActions.getTranslations,
+    translationClearState: translationActions.clearState,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(View);

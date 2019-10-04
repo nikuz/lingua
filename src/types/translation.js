@@ -22,3 +22,19 @@ export type TranslationSaveRequest = {
     image?: string,
     raw: string,
 };
+
+export type Translation = {
+    id: number,
+    word: string,
+    translation: string,
+    pronunciation: string,
+    raw: Array<any>,
+    image: string,
+    created_at?: string,
+};
+
+export type TranslationsList = {
+    from: number,
+    to: number,
+    translations: Translation[],
+};

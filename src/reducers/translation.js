@@ -1,4 +1,6 @@
 // @flow
+
+import { TRANSLATIONS_LIST_PAGE_SIZE } from '../constants/translations';
 import {
     TRANSLATION_REQUEST,
     TRANSLATION_SUCCESS,
@@ -42,6 +44,7 @@ import type {
     TranslationHideErrorsAction,
     ErrorObject,
     TranslationResponse,
+    TranslationsList,
 } from '../types';
 
 export type TranslationReducerState = {
@@ -58,7 +61,7 @@ export type TranslationReducerState = {
     updateLoading: boolean,
     updateError: ?ErrorObject,
     getListLoading: boolean,
-    translationsList: TranslationResponse[],
+    translationsList: TranslationsList,
     getListError: ?ErrorObject,
 };
 
@@ -77,7 +80,11 @@ const initialState: TranslationReducerState = {
     updateLoading: false,
     updateError: null,
     getListLoading: false,
-    translationsList: [],
+    translationsList: {
+        from: 0,
+        to: TRANSLATIONS_LIST_PAGE_SIZE,
+        translations: [],
+    },
     getListError: null,
 };
 
@@ -213,12 +220,32 @@ export default function translationReducer(
                 getListError: null,
             };
 
-        case TRANSLATIONS_GET_SUCCESS:
+        case TRANSLATIONS_GET_SUCCESS: {
+            const currentList = { ...state.translationsList };
+            const translations = currentList.translations.slice(0);
+            const newList = action.payload;
+
+            if (newList.from < currentList.from) {
+                currentList.from = newList.from;
+            }
+            if (newList.to > currentList.to) {
+                currentList.to = newList.to;
+            }
+
+            translations.splice(
+                newList.from,
+                newList.translations.length,
+                ...newList.translations
+            );
+
+            currentList.translations = translations;
+
             return {
                 ...state,
                 getListLoading: false,
-                translationsList: action.payload,
+                translationsList: currentList,
             };
+        }
 
         case TRANSLATIONS_GET_FAILURE:
             return {
@@ -241,7 +268,8 @@ export default function translationReducer(
         case TRANSLATION_CLEAR_STATE:
             return {
                 ...state,
-                ...initialState,
+                translation: null,
+                image: null,
             };
 
         default:

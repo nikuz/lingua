@@ -4,6 +4,7 @@ import type { ErrorObject } from '../common';
 import type {
     TranslationResponse,
     ImageResponse,
+    TranslationsList,
 } from '../translation';
 
 export const TRANSLATION_REQUEST = 'TRANSLATION_REQUEST';
@@ -102,7 +103,7 @@ export type TranslationsGetRequestAction = {
 
 export type TranslationsGetSuccessAction = {
     +type: 'TRANSLATIONS_GET_SUCCESS',
-    +payload: TranslationResponse[],
+    +payload: TranslationsList,
 };
 
 export type TranslationsGetFailureAction = {

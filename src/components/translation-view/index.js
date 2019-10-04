@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { translationActions } from '../../actions';
 import { routerSelectors } from '../../selectors';
 import type { StoreState } from '../../store/type';
-import View from './Translation';
+import View from './TranslationView';
 
 const mapStateToProps = (state: StoreState) => ({
     apiUrl: routerSelectors.getApiUrl(state),
@@ -15,7 +15,6 @@ const mapStateToProps = (state: StoreState) => ({
 
 const mapDispatchToProps = ({
     getImage: translationActions.getImage,
-    clear: translationActions.clearState,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(View);

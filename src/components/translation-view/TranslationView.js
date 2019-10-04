@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import Overlay, { OverlayError } from '../overlay';
+import Overlay from '../overlay';
 import Button from '../button';
 import Icon from '../icon';
 import Loading from '../loading';
@@ -23,7 +23,6 @@ type Props = {
     image?: string,
     imageError: ?ErrorObject,
     getImage: (word: string) => *,
-    clear: () => *,
     onClose: () => *,
     onWordSelect: (data: TranslationSaveRequest) => *,
 };
@@ -42,7 +41,7 @@ type State = {
     pronunciation?: string,
 };
 
-export default class Translation extends React.Component<Props, State> {
+export default class TranslationView extends React.Component<Props, State> {
     state = {};
 
     static getDerivedStateFromProps(newProps: Props) {
@@ -152,8 +151,6 @@ export default class Translation extends React.Component<Props, State> {
         if (onClose instanceof Function) {
             onClose();
         }
-
-        this.props.clear();
     };
 
     render() {
