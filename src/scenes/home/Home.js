@@ -87,22 +87,29 @@ export default class Home extends React.Component<Props, State> {
         this.searchHTTPRequestController = null;
     }
 
-    pager = () => (
-        this.setState((prevState) => {
-            const from = prevState.from + TRANSLATIONS_LIST_PAGE_SIZE;
-            const to = prevState.to + TRANSLATIONS_LIST_PAGE_SIZE;
+    pagerRequest = () => {
+        const {
+            totalAmount,
+            translationsList,
+        } = this.props;
 
-            this.props.getTranslations(
-                from,
-                to
-            );
+        if (translationsList.translations.length < totalAmount) {
+            this.setState((prevState) => {
+                const from = prevState.from + TRANSLATIONS_LIST_PAGE_SIZE;
+                const to = prevState.to + TRANSLATIONS_LIST_PAGE_SIZE;
 
-            return {
-                from,
-                to,
-            };
-        })
-    );
+                this.props.getTranslations(
+                    from,
+                    to
+                );
+
+                return {
+                    from,
+                    to,
+                };
+            });
+        }
+    };
 
     selectTranslationFromList = (translation: Translation) => {
         this.setState({
@@ -157,6 +164,7 @@ export default class Home extends React.Component<Props, State> {
 
         saveMethod(data).then(() => {
             this.props.getTranslations(0, to);
+            this.props.getTotalAmount();
             this.translationClose();
         });
     };
@@ -207,7 +215,6 @@ export default class Home extends React.Component<Props, State> {
         const { selectedTranslation } = this.state;
         const translationManipulateLoading = translationSaveLoading
             || translationUpdateLoading
-            || getListLoading
             || deleteLoading
             || totalAmountLoading;
         const translationManipulateError = getError
@@ -249,7 +256,8 @@ export default class Home extends React.Component<Props, State> {
                 <TranslationsList
                     data={translationsListData}
                     total={total}
-                    onScroll={this.pager}
+                    loading={getListLoading}
+                    onScroll={this.pagerRequest}
                     onSelect={this.selectTranslationFromList}
                     onDelete={this.props.selectTranslationToDelete}
                 />

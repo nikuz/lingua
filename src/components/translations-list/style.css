@@ -1,16 +1,18 @@
 .translations-list-container {
     margin-top: var(--search-form-height);
+    padding-top: 2vmax;
 }
 
 .translations-list-empty {
     margin-top: var(--search-form-height);
+    padding-top: 2vmax;
     text-align: center;
     font-size: 3vmax;
 }
 
 .translations-list-total {
     padding-left: 4vmax;
-    margin-bottom: 0;
+    margin: 0;
 }
 
 .tl-item {
@@ -26,6 +28,10 @@
     bottom: 0;
     right: 0;
     border-bottom: 0.1vmax solid var(--gray-dark);
+}
+
+.tl-item:last-child:after {
+    border-bottom: none;
 }
 
 .tli-pronunciation {
@@ -64,4 +70,11 @@
 .tli-delete-icon {
     width: 3vmax;
     height: 3vmax;
+}
+
+.translations-list-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 7vmax;
 }

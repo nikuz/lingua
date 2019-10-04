@@ -53,7 +53,7 @@ export default class TranslationView extends React.Component<Props, State> {
         const translation = newProps.translation || {};
 
         if (translation) {
-            const word = translation.word;
+            let word = translation.word;
             let translationWord = translation.translation;
             let strangeWord;
             let newState = {
@@ -79,6 +79,8 @@ export default class TranslationView extends React.Component<Props, State> {
                 if (!translationWord) {
                     translationWord = highestRelevantTranslation[0][0];
                 }
+
+                word = highestRelevantTranslation[0][1];
 
                 strangeWord = word.toLowerCase() === translationWord.toLowerCase();
             }

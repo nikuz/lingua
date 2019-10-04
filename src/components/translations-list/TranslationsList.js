@@ -4,18 +4,51 @@ import * as React from 'react';
 import type { Translation } from '../../types';
 import { ButtonRed } from '../button';
 import Pronunciation from '../pronunciation';
+import Loading from '../loading';
 import './style.css';
 
 type Props = {
     data: Translation[],
     total: number,
     apiUrl: string,
-    // onScroll: () => *,
+    loading: boolean,
+    onScroll: () => *,
     onSelect: (translation: Translation) => *,
     onDelete: (translation: Translation) => *,
 };
 
 export default class TranslationsList extends React.Component<Props> {
+    componentDidMount() {
+        document.addEventListener('scroll', this.scrollHandler);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('scroll', this.scrollHandler);
+    }
+
+    thresholdIsSet: boolean = false;
+
+    scrollHandler = () => {
+        const { onScroll } = this.props;
+        const documentElement = document.documentElement;
+
+        if (documentElement instanceof HTMLElement) {
+            const scrollHeight = documentElement.scrollHeight;
+            const scrollPosition = documentElement.scrollTop;
+            const height = documentElement.offsetHeight;
+
+
+            if (scrollHeight - scrollPosition < height + 100) {
+                if (!this.thresholdIsSet && onScroll instanceof Function) {
+                    this.thresholdIsSet = true;
+                    onScroll();
+                }
+            } else {
+                this.thresholdIsSet = false;
+            }
+        }
+    };
+
     renderListItem = (item: Translation) => {
         const { apiUrl } = this.props;
 
@@ -54,6 +87,7 @@ export default class TranslationsList extends React.Component<Props> {
         const {
             data,
             total,
+            loading,
         } = this.props;
 
         if (!data.length) {
@@ -73,6 +107,9 @@ export default class TranslationsList extends React.Component<Props> {
                 </p>
                 <ul className="translations-list">
                     {data.map((item) => this.renderListItem(item))}
+                    <li className="translations-list-loading">
+                        { loading && <Loading size="small" /> }
+                    </li>
                 </ul>
             </div>
         );
