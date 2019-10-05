@@ -35,7 +35,7 @@ type Props = {
     onFocus?: (e: Event) => *,
     onBlur?: (e: Event) => *,
     onKeyDown?: (key: string) => *,
-    onSubmit?: () => *,
+    onSubmit?: (e: KeyboardEvent) => *,
     passwordVisibilityToggle: (field: string, value?: string | number) => *,
     setIntoStore: (field: string, value: string | number, valueType: string) => *,
     valueChange: (field: string, value: string | ?number) => *,
@@ -184,7 +184,7 @@ class TextField extends React.Component<Props, State> {
         } = this.props;
 
         if (e.key === 'Enter' && onSubmit instanceof Function) {
-            onSubmit();
+            onSubmit(e);
         }
         if (onKeyDown && onKeyDown instanceof Function) {
             onKeyDown(e.key);

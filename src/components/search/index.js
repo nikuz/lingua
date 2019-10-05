@@ -11,8 +11,8 @@ type Props = {
     value: string,
     loading: boolean,
     disabled: boolean,
-    onSubmit: () => *,
-    onClick: () => *,
+    onSubmit: (e: KeyboardEvent) => *,
+    onClick: (e: MouseEvent) => *,
     onChange: (data: TextFieldData) => *,
 };
 

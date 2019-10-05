@@ -270,28 +270,29 @@ export const search = (value: string, signal: ?AbortSignal) => (
         },
         signal,
     }).then((response) => {
-        if (response.status === 200) {
-            response.text().then((text) => {
-                let result;
-                try {
-                    result = JSON.parse(text);
-                } catch (e) {
-                    result = null;
-                }
-                if (result) {
+        response.text().then((text) => {
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (e) {
+                result = null;
+            }
+
+            if (result) {
+                if (response.status === 200) {
                     dispatch({
                         type: TRANSLATION_SEARCH_SUCCESS,
                         wsForward: true,
                         payload: result,
                     });
+                } else {
+                    dispatch({
+                        type: TRANSLATION_SEARCH_FAILURE,
+                        payload: result,
+                    });
                 }
-            });
-        } else {
-            dispatch({
-                type: TRANSLATION_SEARCH_FAILURE,
-                payload: response.status,
-            });
-        }
+            }
+        });
     });
 };
 

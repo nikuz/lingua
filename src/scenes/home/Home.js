@@ -9,6 +9,7 @@ import {
     Search,
     TranslationsList,
 } from '../../components';
+import { translationSelectors } from '../../selectors';
 import { TRANSLATIONS_LIST_PAGE_SIZE } from '../../constants/translations';
 import type {
     ErrorObject,
@@ -46,7 +47,7 @@ type Props = {
     translationSave: (data: TranslationSaveRequest) => *,
     translationUpdate: (data: TranslationSaveRequest) => Promise<*>,
     translationHideErrors: () => *,
-    clearSearchFiled: (id: string, value: string) => *,
+    setSearchFieldValue: (id: string, value: string) => *,
     getTranslations: (from: number, to: number) => *,
     selectTranslationToDelete: (translation: Translation) => *,
     deleteTranslationFromList: (id: number) => *,
@@ -149,31 +150,39 @@ export default class Home extends React.Component<Props, State> {
         }
     };
 
-    searchHandler = () => {
-        const { searchField } = this.props;
+    searchHandler = (word: string | MouseEvent | KeyboardEvent) => {
+        let searchValue = this.props.searchField.value;
 
-        if (searchField.value.length) {
-            this.props.translationGet(searchField.value);
+        if (typeof word === 'string') {
+            searchValue = word;
+        }
+
+        if (searchValue.length) {
+            this.props.translationGet(searchValue);
         }
     };
 
     translationSave = (data: TranslationSaveRequest) => {
-        const { to } = this.state;
-        let saveMethod = this.props.translationSave;
-        let isUpdate = false;
-        if (data.id) {
-            saveMethod = this.props.translationUpdate;
-            isUpdate = true;
-        }
-
-        saveMethod(data).then(() => {
-            this.props.getTranslations(0, to);
-            this.props.getTotalAmount();
-            this.translationClose();
-            if (!isUpdate) {
-                this.props.clearSearchState();
+        if (translationSelectors.isCyrillicWord(data.word)) {
+            this.props.setSearchFieldValue(this.props.searchField.id, data.translation);
+            this.searchHandler(data.translation);
+        } else {
+            let saveMethod = this.props.translationSave;
+            let isUpdate = false;
+            if (data.id) {
+                saveMethod = this.props.translationUpdate;
+                isUpdate = true;
             }
-        });
+
+            saveMethod(data).then(() => {
+                this.props.getTranslations(0, this.state.to);
+                this.props.getTotalAmount();
+                this.translationClose();
+                if (!isUpdate) {
+                    this.props.clearSearchState();
+                }
+            });
+        }
     };
 
     translationClose = () => {
@@ -188,7 +197,7 @@ export default class Home extends React.Component<Props, State> {
         }
 
         if (!searchList.translations.length) {
-            this.props.clearSearchFiled(searchField.id, '');
+            this.props.setSearchFieldValue(searchField.id, '');
         }
         this.props.translationClearState();
         this.setState({

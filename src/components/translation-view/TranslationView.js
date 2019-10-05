@@ -5,6 +5,7 @@ import Overlay from '../overlay';
 import Button from '../button';
 import Icon from '../icon';
 import Loading from '../loading';
+import { translationSelectors } from '../../selectors';
 import type {
     TranslationResponse,
     TranslationSaveRequest,
@@ -119,6 +120,7 @@ export default class TranslationView extends React.Component<Props, State> {
             !id
             && !prevState.word
             && word
+            && !translationSelectors.isCyrillicWord(word)
             && !strangeWord
             && !image
             && !imageLoading
@@ -140,7 +142,7 @@ export default class TranslationView extends React.Component<Props, State> {
         } = this.state;
         const translationWord = value;
 
-        if (translation && translation.raw && word && pronunciation && translationWord) {
+        if (translation && translation.raw && word && translationWord) {
             this.props.onWordSelect({
                 id,
                 word,
@@ -230,7 +232,7 @@ export default class TranslationView extends React.Component<Props, State> {
                                 url={`${apiUrl}${pronunciation}`}
                             />
                         ) }
-                        { !strangeWord && !id && (
+                        { !translationSelectors.isCyrillicWord(word) && !strangeWord && !id && (
                             <Button
                                 leftIcon="save"
                                 leftIconClassName="th-save-button-icon"
