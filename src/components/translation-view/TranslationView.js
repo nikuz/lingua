@@ -197,6 +197,7 @@ export default class TranslationView extends React.Component<Props, State> {
             return null;
         }
 
+        const isCyrillicWord = translationSelectors.isCyrillicWord(word);
         const verified = translationWord === highestRelevantTranslation[0][0]
             && highestRelevantTranslation[0][4];
 
@@ -217,7 +218,15 @@ export default class TranslationView extends React.Component<Props, State> {
                             <Icon src="right-arrow" className="thtc-direction-icon" />
                         </div>
                         <div className="thtc-translation">
-                            {translationWord}
+                            { isCyrillicWord && (
+                                <Button
+                                    text={translationWord}
+                                    onClick={() => {
+                                        this.selectMainTranslationWord(translationWord);
+                                    }}
+                                />
+                            ) }
+                            { !isCyrillicWord && translationWord }
                             {!!verified && (
                                 <Icon src="verified" className="th-verified-icon" />
                             )}
@@ -232,7 +241,7 @@ export default class TranslationView extends React.Component<Props, State> {
                                 url={`${apiUrl}${pronunciation}`}
                             />
                         ) }
-                        { !translationSelectors.isCyrillicWord(word) && !strangeWord && !id && (
+                        { !isCyrillicWord && !strangeWord && !id && (
                             <Button
                                 leftIcon="save"
                                 leftIconClassName="th-save-button-icon"

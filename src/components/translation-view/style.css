@@ -4,7 +4,8 @@
 
 .translation-container-content {
     padding-bottom: 2vmax;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .translation-container-close-icon {
@@ -13,6 +14,7 @@
 
 .translation-head {
     position: relative;
+    min-height: 19vmax;
     padding: 1.2vmax 1.5vmax 2vmax;
     background-color: #1a73e8;
     color: var(--white);
@@ -22,6 +24,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .thtc-original {
