@@ -30,7 +30,7 @@ export default class TranslationsList extends React.Component<Props> {
 
     scrollHandler = () => {
         const { onScroll } = this.props;
-        const documentElement = document.documentElement;
+        const documentElement = document.scrollingElement || document.documentElement;
 
         if (documentElement instanceof HTMLElement) {
             const scrollHeight = documentElement.scrollHeight;

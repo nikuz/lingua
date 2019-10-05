@@ -21,6 +21,7 @@
 .th-translation-container {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .thtc-original {
@@ -77,17 +78,23 @@
 
 .thic-image-expand-button {
     margin-left: 2vmax;
+    height: 5.8vmax;
 }
 
 .translation-image-picker-overlay-content {
     width: 90%;
     margin: 0 auto;
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
     box-shadow: 0 1.6vmax 3.2vmax rgba(0, 0, 0, .5);
 }
 
 .tipo-button {
-
+    margin: 2vmax 0;
+    min-height: auto!important;
 }
 
 .thic-error {
