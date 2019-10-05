@@ -37,7 +37,7 @@ const mapDispatchToProps = ({
     translationSave: translationActions.save,
     translationUpdate: translationActions.update,
     removePronunciation: translationActions.removePronunciation,
-    translationHideErrors: translationActions.translationHideErrors,
+    translationHideErrors: translationActions.hideErrors,
     clearSearchFiled: formActions.fieldValueChange,
     getTranslations: translationActions.getTranslations,
     selectTranslationToDelete: translationActions.setDeleteState,
@@ -45,6 +45,7 @@ const mapDispatchToProps = ({
     translationClearState: translationActions.clearState,
     translationClearDeleteState: translationActions.clearDeleteState,
     search: translationActions.search,
+    clearSearchState: translationActions.clearSearchState,
     getTotalAmount: translationActions.getTotalAmount,
 });
 

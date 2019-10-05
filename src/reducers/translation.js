@@ -34,6 +34,7 @@ import {
     TRANSLATION_SEARCH_REQUEST,
     TRANSLATION_SEARCH_SUCCESS,
     TRANSLATION_SEARCH_FAILURE,
+    TRANSLATION_CLEAR_SEARCH_STATE,
 } from '../types/actions/translation';
 import type {
     TranslationRequestAction,
@@ -68,6 +69,7 @@ import type {
     TranslationSearchRequestAction,
     TranslationSearchSuccessAction,
     TranslationSearchFailureAction,
+    TranslationSearchClearStateAction,
     ErrorObject,
     TranslationResponse,
     Translation,
@@ -173,7 +175,8 @@ type Action =
     | TranslationHideErrorsAction
     | TranslationSearchRequestAction
     | TranslationSearchSuccessAction
-    | TranslationSearchFailureAction;
+    | TranslationSearchFailureAction
+    | TranslationSearchClearStateAction;
 
 export default function translationReducer(
     state: TranslationReducerState = initialState,
@@ -457,6 +460,12 @@ export default function translationReducer(
                 ...state,
                 searchLoading: false,
                 searchError: action.payload,
+            };
+
+        case TRANSLATION_CLEAR_SEARCH_STATE:
+            return {
+                ...state,
+                searchList: initialState.searchList,
             };
 
         default:

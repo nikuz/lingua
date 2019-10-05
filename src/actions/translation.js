@@ -40,6 +40,7 @@ import {
     TRANSLATION_SEARCH_REQUEST,
     TRANSLATION_SEARCH_SUCCESS,
     TRANSLATION_SEARCH_FAILURE,
+    TRANSLATION_CLEAR_SEARCH_STATE,
 } from '../types/actions/translation';
 import type { StoreState } from '../store/type';
 import type {
@@ -248,7 +249,7 @@ export const clearDeleteState = () => ({
     type: TRANSLATION_CLEAR_DELETE_STATE,
 });
 
-export const translationHideErrors = () => ({
+export const hideErrors = () => ({
     type: TRANSLATION_HIDE_ERRORS,
 });
 
@@ -293,3 +294,7 @@ export const search = (value: string, signal: ?AbortSignal) => (
         }
     });
 };
+
+export const clearSearchState = () => ({
+    type: TRANSLATION_CLEAR_SEARCH_STATE,
+});

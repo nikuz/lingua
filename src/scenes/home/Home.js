@@ -54,6 +54,7 @@ type Props = {
     translationClearDeleteState: () => *,
     search: (value: string, signal: ?AbortSignal) => *,
     getTotalAmount: () => *,
+    clearSearchState: () => *,
 };
 
 type State = {
@@ -159,14 +160,19 @@ export default class Home extends React.Component<Props, State> {
     translationSave = (data: TranslationSaveRequest) => {
         const { to } = this.state;
         let saveMethod = this.props.translationSave;
+        let isUpdate = false;
         if (data.id) {
             saveMethod = this.props.translationUpdate;
+            isUpdate = true;
         }
 
         saveMethod(data).then(() => {
             this.props.getTranslations(0, to);
             this.props.getTotalAmount();
             this.translationClose();
+            if (!isUpdate) {
+                this.props.clearSearchState();
+            }
         });
     };
 
