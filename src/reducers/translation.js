@@ -432,6 +432,7 @@ export default function translationReducer(
                 getListError: null,
                 deleteError: null,
                 searchError: null,
+                totalAmountError: null,
             };
 
         case TRANSLATION_CLEAR_STATE:
