@@ -2,10 +2,6 @@ html.with-overlay {
     overflow: hidden;
 }
 
-html.with-overlay body {
-    overflow: hidden;
-}
-
 .overlay {
     position: fixed;
     top: 0;
