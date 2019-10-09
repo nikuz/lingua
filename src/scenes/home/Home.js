@@ -167,6 +167,7 @@ export default class Home extends React.Component<Props, State> {
             this.props.setSearchFieldValue(this.props.searchField.id, data.translation);
             this.searchHandler(data.translation);
         } else {
+            const { searchField } = this.props;
             let saveMethod = this.props.translationSave;
             let isUpdate = false;
             if (data.id) {
@@ -177,6 +178,7 @@ export default class Home extends React.Component<Props, State> {
             saveMethod(data).then(() => {
                 this.props.getTranslations(0, this.state.to);
                 this.props.getTotalAmount();
+                this.props.setSearchFieldValue(searchField.id, '');
                 this.translationClose();
                 if (!isUpdate) {
                     this.props.clearSearchState();
