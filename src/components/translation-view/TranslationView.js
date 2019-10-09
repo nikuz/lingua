@@ -200,6 +200,7 @@ export default class TranslationView extends React.Component<Props, State> {
         const isCyrillicWord = translationSelectors.isCyrillicWord(word);
         const verified = translationWord === highestRelevantTranslation[0][0]
             && highestRelevantTranslation[0][4];
+        const transcription = highestRelevantTranslation[1] && highestRelevantTranslation[1][3];
 
         return (
             <Overlay
@@ -233,7 +234,7 @@ export default class TranslationView extends React.Component<Props, State> {
                         </div>
                     </div>
                     <div className="th-transcription">
-                        {highestRelevantTranslation[1][3]}
+                        {transcription}
                     </div>
                     <div className="th-footer">
                         { pronunciation && (
