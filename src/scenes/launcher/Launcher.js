@@ -1,7 +1,10 @@
 // @flow
 
 import * as React from 'react';
-import { Loading } from '../../components';
+import {
+    Loading,
+    OverlayError,
+} from '../../components';
 import type { ErrorObject } from '../../types';
 import './style.css';
 
@@ -12,16 +15,35 @@ type Props = {
     children: React.Node,
 };
 
-export default class Launcher extends React.PureComponent<Props> {
+type State = {
+    globalError: boolean,
+};
+
+export default class Launcher extends React.PureComponent<Props, State> {
+    state = {
+        globalError: false,
+    };
+
     componentDidMount() {
         this.props.getApiIP();
     }
+
+    componentDidCatch() {
+        this.setState({
+            globalError: true,
+        });
+    }
+
+    hideGlobalError = () => {
+        window.location.reload();
+    };
 
     render() {
         const {
             apiIPLoading,
             apiIPError,
         } = this.props;
+        const { globalError } = this.state;
 
         if (apiIPLoading) {
             return (
@@ -46,9 +68,24 @@ export default class Launcher extends React.PureComponent<Props> {
             );
         }
 
+        if (globalError) {
+            return (
+                <OverlayError
+                    message="Some error occurred"
+                    onClick={this.hideGlobalError}
+                />
+            );
+        }
+
         return (
             <div id="launcher">
                 {this.props.children}
+                { globalError && (
+                    <OverlayError
+                        message="Some error occurred"
+                        onClick={this.hideGlobalError}
+                    />
+                ) }
             </div>
         );
     }
