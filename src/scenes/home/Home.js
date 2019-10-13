@@ -17,6 +17,7 @@ import type {
     TranslationResponse,
     TranslationSaveRequest,
     Translation,
+    TranslationsListType,
 } from '../../types';
 import type { TextFieldData } from '../../components';
 import './style.css';
@@ -31,17 +32,14 @@ type Props = {
     translationUpdateLoading: boolean,
     translationUpdateError: ?ErrorObject,
     getListLoading: boolean,
-    translationsList: TranslationsList,
+    translationsList: TranslationsListType,
     getListError: ?ErrorObject,
     translationToDelete: ?Translation,
     deleteLoading: boolean,
     deleteError: ?ErrorObject,
     searchLoading: boolean,
-    searchList: TranslationsList,
+    searchList: TranslationsListType,
     searchError: ?ErrorObject,
-    totalAmountLoading: boolean,
-    totalAmount: number,
-    totalAmountError: ?ErrorObject,
     translationGet: (word: string) => *,
     removePronunciation: (word: string) => *,
     translationSave: (data: TranslationSaveRequest) => *,
@@ -49,12 +47,12 @@ type Props = {
     translationHideErrors: () => *,
     setSearchFieldValue: (id: string, value: string) => *,
     getTranslations: (from: number, to: number) => *,
+    clearTranslationsList: () => *,
     selectTranslationToDelete: (translation: Translation) => *,
     deleteTranslationFromList: (id: number) => *,
-    translationClearState: () => *,
+    clearTranslationState: () => *,
     translationClearDeleteState: () => *,
-    search: (value: string, signal: ?AbortSignal) => *,
-    getTotalAmount: () => *,
+    search: (value: string, from: number, to: number, signal: ?AbortSignal) => *,
     clearSearchState: () => *,
 };
 
@@ -78,7 +76,6 @@ export default class Home extends React.Component<Props, State> {
     componentDidMount() {
         const { from, to } = this.state;
         this.props.getTranslations(from, to);
-        this.props.getTotalAmount();
 
         if (window.AbortController) {
             this.searchHTTPRequestController = new AbortController();
@@ -91,19 +88,34 @@ export default class Home extends React.Component<Props, State> {
 
     pagerRequest = () => {
         const {
-            totalAmount,
             translationsList,
+            searchList,
+            searchField,
         } = this.props;
 
-        if (translationsList.translations.length < totalAmount) {
+        if (
+            (
+                !searchField.value.length
+                && translationsList.translations.length < translationsList.totalAmount
+            )
+            || (searchList.translations.length < searchList.totalAmount)
+        ) {
             this.setState((prevState) => {
                 const from = prevState.from + TRANSLATIONS_LIST_PAGE_SIZE;
                 const to = prevState.to + TRANSLATIONS_LIST_PAGE_SIZE;
 
-                this.props.getTranslations(
-                    from,
-                    to
-                );
+                if (searchField.value.length) {
+                    this.props.search(
+                        searchField.value,
+                        from,
+                        to
+                    );
+                } else {
+                    this.props.getTranslations(
+                        from,
+                        to
+                    );
+                }
 
                 return {
                     from,
@@ -126,27 +138,64 @@ export default class Home extends React.Component<Props, State> {
         if (translationToDelete) {
             this.props.deleteTranslationFromList(translationToDelete.id).then(() => {
                 this.props.getTranslations(0, to);
-                this.props.getTotalAmount();
             });
         }
     };
 
+    searchTimer: TimeoutID;
+
     searchChange = (data: TextFieldData) => {
+        const {
+            translationsList,
+            searchList,
+        } = this.props;
         const value = data.value.toString().trim();
+
+        clearTimeout(this.searchTimer);
+
         if (value !== '' && value.length > 1) {
+            if (translationsList.translations.length) {
+                this.props.clearTranslationsList();
+            }
             if (this.searchHTTPRequest && this.searchHTTPRequestController) {
                 this.searchHTTPRequestController.abort();
                 this.searchHTTPRequestController = new AbortController();
                 this.searchHTTPRequest = null;
             }
 
-            this.searchHTTPRequest = this.props.search(
-                value,
-                this.searchHTTPRequestController ? this.searchHTTPRequestController.signal : null
-            );
-            this.searchHTTPRequest.then(() => {
-                this.searchHTTPRequest = null;
-            });
+            const from = 0;
+            const to = TRANSLATIONS_LIST_PAGE_SIZE;
+
+            this.searchTimer = setTimeout(() => {
+                this.searchHTTPRequest = this.props.search(
+                    value,
+                    from,
+                    to,
+                    this.searchHTTPRequestController
+                        ? this.searchHTTPRequestController.signal
+                        : null
+                );
+                this.searchHTTPRequest.then(() => {
+                    this.searchHTTPRequest = null;
+                    this.setState({
+                        from,
+                        to,
+                    });
+                });
+            }, 100);
+        } else {
+            if (searchList.translations.length) {
+                this.props.clearSearchState();
+            }
+            if (!translationsList.translations.length) {
+                const from = 0;
+                const to = TRANSLATIONS_LIST_PAGE_SIZE;
+                this.props.getTranslations(from, to);
+                this.setState({
+                    from,
+                    to,
+                });
+            }
         }
     };
 
@@ -177,7 +226,6 @@ export default class Home extends React.Component<Props, State> {
 
             saveMethod(data).then(() => {
                 this.props.getTranslations(0, this.state.to);
-                this.props.getTotalAmount();
                 this.props.setSearchFieldValue(searchField.id, '');
                 this.translationClose();
                 if (!isUpdate) {
@@ -201,7 +249,7 @@ export default class Home extends React.Component<Props, State> {
         if (!searchList.translations.length) {
             this.props.setSearchFieldValue(searchField.id, '');
         }
-        this.props.translationClearState();
+        this.props.clearTranslationState();
         this.setState({
             selectedTranslation: null,
         });
@@ -225,26 +273,21 @@ export default class Home extends React.Component<Props, State> {
             searchLoading,
             searchList,
             searchError,
-            totalAmountLoading,
-            totalAmount,
-            totalAmountError,
         } = this.props;
         let { translation } = this.props;
         const { selectedTranslation } = this.state;
         const translationManipulateLoading = translationSaveLoading
             || translationUpdateLoading
-            || deleteLoading
-            || totalAmountLoading;
+            || deleteLoading;
         const translationManipulateError = getError
             || translationSaveError
             || translationUpdateError
             || getListError
             || deleteError
-            || searchError
-            || totalAmountError;
+            || searchError;
         const isSearchDisabled = !searchField.value.length || translationGetLoading;
         let translationsListData = translationsList.translations;
-        let total = totalAmount;
+        let total = translationsList.totalAmount;
 
         if (!translation && selectedTranslation) {
             translation = selectedTranslation;
@@ -252,7 +295,7 @@ export default class Home extends React.Component<Props, State> {
 
         if (searchField.value.length > 1) {
             translationsListData = searchList.translations;
-            total = searchList.translations.length;
+            total = searchList.totalAmount;
         }
 
         return (

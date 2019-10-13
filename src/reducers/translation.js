@@ -22,9 +22,7 @@ import {
     TRANSLATIONS_GET_REQUEST,
     TRANSLATIONS_GET_SUCCESS,
     TRANSLATIONS_GET_FAILURE,
-    TRANSLATIONS_GET_AMOUNT_REQUEST,
-    TRANSLATIONS_GET_AMOUNT_SUCCESS,
-    TRANSLATIONS_GET_AMOUNT_FAILURE,
+    TRANSLATIONS_CLEAR_LIST,
     TRANSLATION_HIDE_ERRORS,
     TRANSLATION_SET_DELETE_STATE,
     TRANSLATION_DELETE_REQUEST,
@@ -57,9 +55,7 @@ import type {
     TranslationsGetRequestAction,
     TranslationsGetSuccessAction,
     TranslationsGetFailureAction,
-    TranslationsGetAmountRequestAction,
-    TranslationsGetAmountSuccessAction,
-    TranslationsGetAmountFailureAction,
+    TranslationsClearListAction,
     TranslationHideErrorsAction,
     TranslationSetDeleteStateAction,
     TranslationDeleteRequestAction,
@@ -73,7 +69,7 @@ import type {
     ErrorObject,
     TranslationResponse,
     Translation,
-    TranslationsList,
+    TranslationsListType,
 } from '../types';
 
 export type TranslationReducerState = {
@@ -92,17 +88,14 @@ export type TranslationReducerState = {
     updateLoading: boolean,
     updateError: ?ErrorObject,
     getListLoading: boolean,
-    translationsList: TranslationsList,
+    translationsList: TranslationsListType,
     getListError: ?ErrorObject,
     translationToDelete: ?Translation,
     deleteLoading: boolean,
     deleteError: ?ErrorObject,
     searchLoading: boolean,
-    searchList: TranslationsList,
+    searchList: TranslationsListType,
     searchError: ?ErrorObject,
-    totalAmountLoading: boolean,
-    totalAmount: number,
-    totalAmountError: ?ErrorObject,
 };
 
 const initialState: TranslationReducerState = {
@@ -125,6 +118,7 @@ const initialState: TranslationReducerState = {
     translationsList: {
         from: 0,
         to: TRANSLATIONS_LIST_PAGE_SIZE,
+        totalAmount: 0,
         translations: [],
     },
     getListError: null,
@@ -135,12 +129,33 @@ const initialState: TranslationReducerState = {
     searchList: {
         from: 0,
         to: TRANSLATIONS_LIST_PAGE_SIZE,
+        totalAmount: 0,
         translations: [],
     },
     searchError: null,
-    totalAmountLoading: false,
-    totalAmount: 0,
-    totalAmountError: null,
+};
+
+const mergeTranslationsList = (stateList, newList) => {
+    const currentList = { ...stateList };
+    const translations = currentList.translations.slice(0);
+
+    if (newList.from < currentList.from) {
+        currentList.from = newList.from;
+    }
+    if (newList.to > currentList.to) {
+        currentList.to = newList.to;
+    }
+
+    translations.splice(
+        newList.from,
+        newList.to - newList.from,
+        ...newList.translations
+    );
+
+    currentList.translations = translations;
+    currentList.totalAmount = newList.totalAmount;
+
+    return currentList;
 };
 
 type Action =
@@ -164,9 +179,7 @@ type Action =
     | TranslationsGetRequestAction
     | TranslationsGetSuccessAction
     | TranslationsGetFailureAction
-    | TranslationsGetAmountRequestAction
-    | TranslationsGetAmountSuccessAction
-    | TranslationsGetAmountFailureAction
+    | TranslationsClearListAction
     | TranslationSetDeleteStateAction
     | TranslationDeleteRequestAction
     | TranslationDeleteSuccessAction
@@ -303,32 +316,15 @@ export default function translationReducer(
                 getListError: null,
             };
 
-        case TRANSLATIONS_GET_SUCCESS: {
-            const currentList = { ...state.translationsList };
-            const translations = currentList.translations.slice(0);
-            const newList = action.payload;
-
-            if (newList.from < currentList.from) {
-                currentList.from = newList.from;
-            }
-            if (newList.to > currentList.to) {
-                currentList.to = newList.to;
-            }
-
-            translations.splice(
-                newList.from,
-                newList.to - newList.from,
-                ...newList.translations
-            );
-
-            currentList.translations = translations;
-
+        case TRANSLATIONS_GET_SUCCESS:
             return {
                 ...state,
                 getListLoading: false,
-                translationsList: currentList,
+                translationsList: mergeTranslationsList(
+                    state.translationsList,
+                    action.payload
+                ),
             };
-        }
 
         case TRANSLATIONS_GET_FAILURE:
             return {
@@ -337,24 +333,10 @@ export default function translationReducer(
                 getListError: action.payload,
             };
 
-        case TRANSLATIONS_GET_AMOUNT_REQUEST:
+        case TRANSLATIONS_CLEAR_LIST:
             return {
                 ...state,
-                totalAmountLoading: true,
-            };
-
-        case TRANSLATIONS_GET_AMOUNT_SUCCESS:
-            return {
-                ...state,
-                totalAmountLoading: false,
-                totalAmount: action.payload.value,
-            };
-
-        case TRANSLATIONS_GET_AMOUNT_FAILURE:
-            return {
-                ...state,
-                totalAmountLoading: false,
-                totalAmountError: action.payload,
+                translationsList: initialState.translationsList,
             };
 
         case TRANSLATION_SET_DELETE_STATE:
@@ -432,7 +414,6 @@ export default function translationReducer(
                 getListError: null,
                 deleteError: null,
                 searchError: null,
-                totalAmountError: null,
             };
 
         case TRANSLATION_CLEAR_STATE:
@@ -453,7 +434,10 @@ export default function translationReducer(
             return {
                 ...state,
                 searchLoading: false,
-                searchList: action.payload,
+                searchList: mergeTranslationsList(
+                    state.searchList,
+                    action.payload
+                ),
             };
 
         case TRANSLATION_SEARCH_FAILURE:

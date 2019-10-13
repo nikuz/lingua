@@ -26,6 +26,15 @@ export default class Launcher extends React.PureComponent<Props, State> {
 
     componentDidMount() {
         this.props.getApiIP();
+
+        // set viewport size to prevent android viewport size change on keyboard appear
+        const viewport = document.querySelector('meta[name=viewport]');
+        if (viewport instanceof HTMLMetaElement) {
+            viewport.setAttribute(
+                'content',
+                `width=${window.innerWidth}, height=${window.innerHeight}, initial-scale=1.0`
+            );
+        }
     }
 
     componentDidCatch() {

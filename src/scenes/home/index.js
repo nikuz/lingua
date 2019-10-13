@@ -27,9 +27,6 @@ const mapStateToProps = (state: StoreState) => ({
     searchLoading: state.translation.searchLoading,
     searchList: state.translation.searchList,
     searchError: state.translation.searchError,
-    totalAmountLoading: state.translation.totalAmountLoading,
-    totalAmount: state.translation.totalAmount,
-    totalAmountError: state.translation.totalAmountError,
 });
 
 const mapDispatchToProps = ({
@@ -40,13 +37,13 @@ const mapDispatchToProps = ({
     translationHideErrors: translationActions.hideErrors,
     setSearchFieldValue: formActions.fieldValueChange,
     getTranslations: translationActions.getTranslations,
+    clearTranslationsList: translationActions.clearList,
     selectTranslationToDelete: translationActions.setDeleteState,
     deleteTranslationFromList: translationActions.deleteTranslation,
-    translationClearState: translationActions.clearState,
+    clearTranslationState: translationActions.clearState,
     translationClearDeleteState: translationActions.clearDeleteState,
     search: translationActions.search,
     clearSearchState: translationActions.clearSearchState,
-    getTotalAmount: translationActions.getTotalAmount,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(View);

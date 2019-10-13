@@ -4,9 +4,8 @@ import type { ErrorObject } from '../common';
 import type {
     TranslationResponse,
     ImageResponse,
-    TranslationsList,
+    TranslationsListType,
     Translation,
-    TranslationsListAmountResponse,
 } from '../translation';
 
 export const TRANSLATION_REQUEST = 'TRANSLATION_REQUEST';
@@ -30,9 +29,8 @@ export const TRANSLATION_UPDATE_FAILURE = 'TRANSLATION_UPDATE_FAILURE';
 export const TRANSLATIONS_GET_REQUEST = 'TRANSLATIONS_GET_REQUEST';
 export const TRANSLATIONS_GET_SUCCESS = 'TRANSLATIONS_GET_SUCCESS';
 export const TRANSLATIONS_GET_FAILURE = 'TRANSLATIONS_GET_FAILURE';
-export const TRANSLATIONS_GET_AMOUNT_REQUEST = 'TRANSLATIONS_GET_AMOUNT_REQUEST';
-export const TRANSLATIONS_GET_AMOUNT_SUCCESS = 'TRANSLATIONS_GET_AMOUNT_SUCCESS';
-export const TRANSLATIONS_GET_AMOUNT_FAILURE = 'TRANSLATIONS_GET_AMOUNT_FAILURE';
+export const TRANSLATIONS_CLEAR_LIST = 'TRANSLATIONS_CLEAR_LIST';
+export const TRANSLATION_CLEAR_LIST = 'TRANSLATION_CLEAR_LIST';
 export const TRANSLATION_SET_DELETE_STATE = 'TRANSLATION_SET_DELETE_STATE';
 export const TRANSLATION_DELETE_REQUEST = 'TRANSLATION_DELETE_REQUEST';
 export const TRANSLATION_DELETE_SUCCESS = 'TRANSLATION_DELETE_SUCCESS';
@@ -128,7 +126,7 @@ export type TranslationsGetRequestAction = {
 
 export type TranslationsGetSuccessAction = {
     +type: 'TRANSLATIONS_GET_SUCCESS',
-    +payload: TranslationsList,
+    +payload: TranslationsListType,
 };
 
 export type TranslationsGetFailureAction = {
@@ -136,17 +134,8 @@ export type TranslationsGetFailureAction = {
     +payload: ErrorObject,
 };
 
-export type TranslationsGetAmountRequestAction = {
-    +type: 'TRANSLATIONS_GET_AMOUNT_REQUEST',
-};
-
-export type TranslationsGetAmountSuccessAction = {
-    +type: 'TRANSLATIONS_GET_AMOUNT_SUCCESS',
-    +payload: TranslationsListAmountResponse,
-};
-
-export type TranslationsGetAmountFailureAction = {
-    +type: 'TRANSLATIONS_GET_AMOUNT_FAILURE',
+export type TranslationsClearListAction = {
+    +type: 'TRANSLATIONS_CLEAR_LIST',
     +payload: ErrorObject,
 };
 
@@ -182,7 +171,7 @@ export type TranslationSearchRequestAction = {
 
 export type TranslationSearchSuccessAction = {
     +type: 'TRANSLATION_SEARCH_SUCCESS',
-    +payload: TranslationsList,
+    +payload: TranslationsListType,
 };
 
 export type TranslationSearchFailureAction = {

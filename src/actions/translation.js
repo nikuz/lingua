@@ -28,9 +28,7 @@ import {
     TRANSLATIONS_GET_REQUEST,
     TRANSLATIONS_GET_SUCCESS,
     TRANSLATIONS_GET_FAILURE,
-    TRANSLATIONS_GET_AMOUNT_REQUEST,
-    TRANSLATIONS_GET_AMOUNT_SUCCESS,
-    TRANSLATIONS_GET_AMOUNT_FAILURE,
+    TRANSLATIONS_CLEAR_LIST,
     TRANSLATION_SET_DELETE_STATE,
     TRANSLATION_DELETE_REQUEST,
     TRANSLATION_DELETE_SUCCESS,
@@ -47,9 +45,8 @@ import type {
     TranslationResponse,
     TranslationSaveRequest,
     Translation,
-    TranslationsList,
+    TranslationsListType,
     ImageResponse,
-    TranslationsListAmountResponse,
 } from '../types';
 
 export const get = (word: string) => (
@@ -176,7 +173,7 @@ export const update = (data: TranslationSaveRequest) => (
 export const getTranslations = (from: number, to: number) => (
     dispatch: DispatchAPI<*>,
     getState: () => StoreState
-): Promise<TranslationsList> => {
+): Promise<TranslationsListType> => {
     const apiUrl = routerSelectors.getApiUrl(getState());
     return actionCreator({
         dispatch,
@@ -197,25 +194,9 @@ export const getTranslations = (from: number, to: number) => (
     });
 };
 
-export const getTotalAmount = () => (
-    dispatch: DispatchAPI<*>,
-    getState: () => StoreState
-): Promise<TranslationsListAmountResponse> => {
-    const apiUrl = routerSelectors.getApiUrl(getState());
-    return actionCreator({
-        dispatch,
-        requestAction: TRANSLATIONS_GET_AMOUNT_REQUEST,
-        successAction: TRANSLATIONS_GET_AMOUNT_SUCCESS,
-        failureAction: TRANSLATIONS_GET_AMOUNT_FAILURE,
-        action: () => request.get({
-            url: `${apiUrl}/translations/amount`,
-            headers: {
-                Authorization: routerSelectors.getAuthorisation(),
-            },
-            contentType: 'json',
-        }),
-    });
-};
+export const clearList = () => ({
+    type: TRANSLATIONS_CLEAR_LIST,
+});
 
 export const setDeleteState = (translation: Translation) => ({
     type: TRANSLATION_SET_DELETE_STATE,
@@ -253,7 +234,7 @@ export const hideErrors = () => ({
     type: TRANSLATION_HIDE_ERRORS,
 });
 
-export const search = (value: string, signal: ?AbortSignal) => (
+export const search = (value: string, from: number, to: number, signal: ?AbortSignal) => (
     dispatch: DispatchAPI<*>,
     getState: () => StoreState
 ): Promise<*> => {
@@ -262,7 +243,7 @@ export const search = (value: string, signal: ?AbortSignal) => (
     });
 
     const apiUrl = routerSelectors.getApiUrl(getState());
-    const requestUrl = `${apiUrl}/translate/search?q=${value}`;
+    const requestUrl = `${apiUrl}/translate/search?q=${value}&from=${from}&to=${to}`;
 
     return fetch(requestUrl, {
         headers: {

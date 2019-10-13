@@ -22,20 +22,38 @@ export default class TranslationsList extends React.Component<Props> {
         document.addEventListener('scroll', this.scrollHandler);
     }
 
+    componentDidUpdate(prevProps: Props) {
+        if (
+            prevProps.data.length > this.props.data.length
+            || prevProps.data[0] !== this.props.data[0]
+        ) {
+            this.resetScroll();
+        }
+    }
+
     componentWillUnmount() {
         document.removeEventListener('scroll', this.scrollHandler);
     }
+
+    getScrollingContainer = () => document.scrollingElement || document.documentElement;
+
+    resetScroll = () => {
+        const scrollingContainer = this.getScrollingContainer();
+        if (scrollingContainer instanceof HTMLElement) {
+            scrollingContainer.scrollTop = 0;
+        }
+    };
 
     thresholdIsSet: boolean = false;
 
     scrollHandler = () => {
         const { onScroll } = this.props;
-        const documentElement = document.scrollingElement || document.documentElement;
+        const scrollingContainer = this.getScrollingContainer();
 
-        if (documentElement instanceof HTMLElement) {
-            const scrollHeight = documentElement.scrollHeight;
-            const scrollPosition = documentElement.scrollTop;
-            const height = documentElement.offsetHeight;
+        if (scrollingContainer instanceof HTMLElement) {
+            const scrollHeight = scrollingContainer.scrollHeight;
+            const scrollPosition = scrollingContainer.scrollTop;
+            const height = scrollingContainer.offsetHeight;
 
 
             if (scrollHeight - scrollPosition < height + 100) {

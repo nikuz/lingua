@@ -33,9 +33,10 @@ export type Translation = {
     created_at?: string,
 };
 
-export type TranslationsList = {
+export type TranslationsListType = {
     from: number,
     to: number,
+    totalAmount: number,
     translations: Translation[],
 };
 
