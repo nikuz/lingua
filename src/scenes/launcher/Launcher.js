@@ -46,7 +46,7 @@ export default class Launcher extends React.PureComponent<Props, State> {
         if (viewport instanceof HTMLMetaElement) {
             viewport.setAttribute(
                 'content',
-                `width=${window.innerWidth}, height=${window.innerHeight}, initial-scale=1.0`
+                `width=${window.innerWidth}, height=${window.innerHeight}, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0`
             );
         }
     };
