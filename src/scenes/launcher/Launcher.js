@@ -27,7 +27,7 @@ export default class Launcher extends React.PureComponent<Props, State> {
     componentDidMount() {
         this.props.getApiIP();
         this.changeViewportSize();
-        document.addEventListener('orientationchange', this.changeViewportSize);
+        window.addEventListener('orientationchange', this.changeViewportSize);
     }
 
     componentDidCatch() {
@@ -37,7 +37,7 @@ export default class Launcher extends React.PureComponent<Props, State> {
     }
 
     componentWillUnmount() {
-        document.removeEventListener('orientationchange', this.changeViewportSize);
+        window.removeEventListener('orientationchange', this.changeViewportSize);
     }
 
     changeViewportSize = () => {
