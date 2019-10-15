@@ -1,0 +1,15 @@
+.float-button {
+    position: fixed;
+    right: 2vmax;
+    bottom: 2vmax;
+    width: 10vmax!important;
+    min-height: 10vmax!important;
+    color: var(--white);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .3);
+    z-index: 20;
+}
+
+.float-button-icon {
+    width: 5vmax;
+    height: 5vmax;
+}

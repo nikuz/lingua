@@ -8,6 +8,7 @@ import {
     OverlayConfirm,
     Search,
     TranslationsList,
+    FloatButton,
 } from '../../components';
 import { translationSelectors } from '../../selectors';
 import { TRANSLATIONS_LIST_PAGE_SIZE } from '../../constants/translations';
@@ -40,6 +41,12 @@ type Props = {
     searchLoading: boolean,
     searchList: TranslationsListType,
     searchError: ?ErrorObject,
+    randomWordLoading: boolean,
+    randomWord: ?string,
+    randomWordError: ?ErrorObject,
+    randomWordDeleteLoading: boolean,
+    randomWordDeleted: boolean,
+    randomWordDeleteError: ?ErrorObject,
     translationGet: (word: string) => *,
     removePronunciation: (word: string) => *,
     translationSave: (data: TranslationSaveRequest) => *,
@@ -54,6 +61,8 @@ type Props = {
     translationClearDeleteState: () => *,
     search: (value: string, from: number, to: number, signal: ?AbortSignal) => *,
     clearSearchState: () => *,
+    getRandomWord: () => *,
+    deleteRandomWord: (word: string) => *,
 };
 
 type State = {
@@ -79,6 +88,15 @@ export default class Home extends React.Component<Props, State> {
 
         if (window.AbortController) {
             this.searchHTTPRequestController = new AbortController();
+        }
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (!prevProps.randomWord && this.props.randomWord) {
+            this.searchHandler(this.props.randomWord);
+        }
+        if (!prevProps.randomWordDeleted && this.props.randomWordDeleted) {
+            this.translationClose();
         }
     }
 
@@ -122,6 +140,13 @@ export default class Home extends React.Component<Props, State> {
                     to,
                 };
             });
+        }
+    };
+
+    deleteRandomWord = () => {
+        const { randomWord } = this.props;
+        if (randomWord) {
+            this.props.deleteRandomWord(randomWord);
         }
     };
 
@@ -241,6 +266,7 @@ export default class Home extends React.Component<Props, State> {
             searchField,
             searchList,
         } = this.props;
+        const { from, to } = this.state;
 
         if (translation && !translation.id) {
             this.props.removePronunciation(translation.word);
@@ -248,6 +274,7 @@ export default class Home extends React.Component<Props, State> {
 
         if (!searchList.translations.length) {
             this.props.setSearchFieldValue(searchField.id, '');
+            this.props.getTranslations(from, to);
         }
         this.props.clearTranslationState();
         this.setState({
@@ -273,18 +300,26 @@ export default class Home extends React.Component<Props, State> {
             searchLoading,
             searchList,
             searchError,
+            randomWordLoading,
+            randomWord,
+            randomWordError,
+            randomWordDeleteLoading,
+            randomWordDeleteError,
         } = this.props;
         let { translation } = this.props;
         const { selectedTranslation } = this.state;
         const translationManipulateLoading = translationSaveLoading
             || translationUpdateLoading
-            || deleteLoading;
+            || deleteLoading
+            || randomWordDeleteLoading;
         const translationManipulateError = getError
             || translationSaveError
             || translationUpdateError
             || getListError
             || deleteError
-            || searchError;
+            || searchError
+            || randomWordError
+            || randomWordDeleteError;
         const isSearchDisabled = !searchField.value.length || translationGetLoading;
         let translationsListData = translationsList.translations;
         let total = translationsList.totalAmount;
@@ -303,7 +338,7 @@ export default class Home extends React.Component<Props, State> {
                 <Search
                     id={searchField.id}
                     value={searchField.value}
-                    loading={translationGetLoading || searchLoading}
+                    loading={translationGetLoading || searchLoading || randomWordLoading}
                     disabled={isSearchDisabled}
                     onChange={this.searchChange}
                     onSubmit={this.searchHandler}
@@ -311,6 +346,8 @@ export default class Home extends React.Component<Props, State> {
                 />
                 <TranslationView
                     translation={translation}
+                    randomWord={randomWord}
+                    deleteRandomWord={this.deleteRandomWord}
                     onClose={this.translationClose}
                     onWordSelect={this.translationSave}
                 />
@@ -338,6 +375,10 @@ export default class Home extends React.Component<Props, State> {
                         onCancelClick={this.props.translationClearDeleteState}
                     />
                 ) }
+                <FloatButton
+                    loading={randomWordLoading || (!!randomWord && translationGetLoading)}
+                    onClick={this.props.getRandomWord}
+                />
             </div>
         );
     }

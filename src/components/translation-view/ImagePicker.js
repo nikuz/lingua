@@ -6,6 +6,7 @@ import Button from '../button';
 type Props = {
     opened: boolean,
     images: string[],
+    currentImage: ?string,
     onSelect: (image: string) => *,
     onClose: () => *,
 };
@@ -14,6 +15,7 @@ export default function TranslationImagePicker(props: Props) {
     const {
         opened,
         images,
+        currentImage,
     } = props;
 
     if (!opened) {
@@ -33,12 +35,12 @@ export default function TranslationImagePicker(props: Props) {
                     className="tipo-button"
                     onClick={() => props.onSelect(image)}
                 >
-                    <img
-                        src={image}
-                        className="tipo-image"
-                    />
+                    <img src={image} />
                 </Button>
             ))}
+            {!images.length && currentImage && (
+                <img src={currentImage} />
+            )}
         </Overlay>
     );
 }

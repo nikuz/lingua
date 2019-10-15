@@ -33,6 +33,12 @@ import {
     TRANSLATION_SEARCH_SUCCESS,
     TRANSLATION_SEARCH_FAILURE,
     TRANSLATION_CLEAR_SEARCH_STATE,
+    TRANSLATION_GET_RANDOM_WORD_REQUEST,
+    TRANSLATION_GET_RANDOM_WORD_SUCCESS,
+    TRANSLATION_GET_RANDOM_WORD_FAILURE,
+    TRANSLATION_DELETE_RANDOM_WORD_REQUEST,
+    TRANSLATION_DELETE_RANDOM_WORD_SUCCESS,
+    TRANSLATION_DELETE_RANDOM_WORD_FAILURE,
 } from '../types/actions/translation';
 import type {
     TranslationRequestAction,
@@ -66,6 +72,12 @@ import type {
     TranslationSearchSuccessAction,
     TranslationSearchFailureAction,
     TranslationSearchClearStateAction,
+    TranslationGetRandomWordRequestAction,
+    TranslationGetRandomWordSuccessAction,
+    TranslationGetRandomWordFailureAction,
+    TranslationDeleteRandomWordRequestAction,
+    TranslationDeleteRandomWordSuccessAction,
+    TranslationDeleteRandomWordFailureAction,
     ErrorObject,
     TranslationResponse,
     Translation,
@@ -96,6 +108,12 @@ export type TranslationReducerState = {
     searchLoading: boolean,
     searchList: TranslationsListType,
     searchError: ?ErrorObject,
+    randomWordLoading: boolean,
+    randomWord: ?string,
+    randomWordError: ?ErrorObject,
+    randomWordDeleteLoading: boolean,
+    randomWordDeleted: boolean,
+    randomWordDeleteError: ?ErrorObject,
 };
 
 const initialState: TranslationReducerState = {
@@ -133,6 +151,12 @@ const initialState: TranslationReducerState = {
         translations: [],
     },
     searchError: null,
+    randomWordLoading: false,
+    randomWord: null,
+    randomWordError: null,
+    randomWordDeleteLoading: false,
+    randomWordDeleted: false,
+    randomWordDeleteError: null,
 };
 
 const mergeTranslationsList = (stateList, newList) => {
@@ -189,7 +213,13 @@ type Action =
     | TranslationSearchRequestAction
     | TranslationSearchSuccessAction
     | TranslationSearchFailureAction
-    | TranslationSearchClearStateAction;
+    | TranslationSearchClearStateAction
+    | TranslationGetRandomWordRequestAction
+    | TranslationGetRandomWordSuccessAction
+    | TranslationGetRandomWordFailureAction
+    | TranslationDeleteRandomWordRequestAction
+    | TranslationDeleteRandomWordSuccessAction
+    | TranslationDeleteRandomWordFailureAction;
 
 export default function translationReducer(
     state: TranslationReducerState = initialState,
@@ -414,6 +444,8 @@ export default function translationReducer(
                 getListError: null,
                 deleteError: null,
                 searchError: null,
+                randomWordError: null,
+                randomWordDeleteError: null,
             };
 
         case TRANSLATION_CLEAR_STATE:
@@ -422,6 +454,8 @@ export default function translationReducer(
                 translation: null,
                 image: null,
                 images: [],
+                randomWord: null,
+                randomWordDeleted: false,
             };
 
         case TRANSLATION_SEARCH_REQUEST:
@@ -451,6 +485,46 @@ export default function translationReducer(
             return {
                 ...state,
                 searchList: initialState.searchList,
+            };
+
+        case TRANSLATION_GET_RANDOM_WORD_REQUEST:
+            return {
+                ...state,
+                randomWordLoading: true,
+            };
+
+        case TRANSLATION_GET_RANDOM_WORD_SUCCESS:
+            return {
+                ...state,
+                randomWord: action.payload,
+                randomWordLoading: false,
+            };
+
+        case TRANSLATION_GET_RANDOM_WORD_FAILURE:
+            return {
+                ...state,
+                randomWordError: action.payload,
+                randomWordLoading: false,
+            };
+
+        case TRANSLATION_DELETE_RANDOM_WORD_REQUEST:
+            return {
+                ...state,
+                randomWordDeleteLoading: true,
+            };
+
+        case TRANSLATION_DELETE_RANDOM_WORD_SUCCESS:
+            return {
+                ...state,
+                randomWordDeleted: true,
+                randomWordDeleteLoading: false,
+            };
+
+        case TRANSLATION_DELETE_RANDOM_WORD_FAILURE:
+            return {
+                ...state,
+                randomWordDeleteError: action.payload,
+                randomWordDeleteLoading: false,
             };
 
         default:

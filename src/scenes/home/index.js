@@ -27,6 +27,12 @@ const mapStateToProps = (state: StoreState) => ({
     searchLoading: state.translation.searchLoading,
     searchList: state.translation.searchList,
     searchError: state.translation.searchError,
+    randomWordLoading: state.translation.randomWordLoading,
+    randomWord: state.translation.randomWord,
+    randomWordError: state.translation.randomWordError,
+    randomWordDeleteLoading: state.translation.randomWordDeleteLoading,
+    randomWordDeleted: state.translation.randomWordDeleted,
+    randomWordDeleteError: state.translation.randomWordDeleteError,
 });
 
 const mapDispatchToProps = ({
@@ -44,6 +50,8 @@ const mapDispatchToProps = ({
     translationClearDeleteState: translationActions.clearDeleteState,
     search: translationActions.search,
     clearSearchState: translationActions.clearSearchState,
+    getRandomWord: translationActions.getRandomWord,
+    deleteRandomWord: translationActions.deleteRandomWord,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(View);

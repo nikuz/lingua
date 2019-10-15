@@ -21,6 +21,7 @@ import TextField from './text-field';
 import TranslationView from './translation-view';
 import Search from './search';
 import TranslationsList from './translations-list';
+import FloatButton from './float-button';
 
 export {
     Button,
@@ -42,6 +43,7 @@ export {
     TranslationView,
     Search,
     TranslationsList,
+    FloatButton,
 };
 
 export type * from './text-field';

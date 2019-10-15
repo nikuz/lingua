@@ -41,6 +41,12 @@ export const TRANSLATION_SEARCH_REQUEST = 'TRANSLATION_SEARCH_REQUEST';
 export const TRANSLATION_SEARCH_SUCCESS = 'TRANSLATION_SEARCH_SUCCESS';
 export const TRANSLATION_SEARCH_FAILURE = 'TRANSLATION_SEARCH_FAILURE';
 export const TRANSLATION_CLEAR_SEARCH_STATE = 'TRANSLATION_CLEAR_SEARCH_STATE';
+export const TRANSLATION_GET_RANDOM_WORD_REQUEST = 'TRANSLATION_GET_RANDOM_WORD_REQUEST';
+export const TRANSLATION_GET_RANDOM_WORD_SUCCESS = 'TRANSLATION_GET_RANDOM_WORD_SUCCESS';
+export const TRANSLATION_GET_RANDOM_WORD_FAILURE = 'TRANSLATION_GET_RANDOM_WORD_FAILURE';
+export const TRANSLATION_DELETE_RANDOM_WORD_REQUEST = 'TRANSLATION_DELETE_RANDOM_WORD_REQUEST';
+export const TRANSLATION_DELETE_RANDOM_WORD_SUCCESS = 'TRANSLATION_DELETE_RANDOM_WORD_SUCCESS';
+export const TRANSLATION_DELETE_RANDOM_WORD_FAILURE = 'TRANSLATION_DELETE_RANDOM_WORD_FAILURE';
 
 export type TranslationRequestAction = {
     +type: 'TRANSLATION_REQUEST',
@@ -181,4 +187,31 @@ export type TranslationSearchFailureAction = {
 
 export type TranslationSearchClearStateAction = {
     +type: 'TRANSLATION_CLEAR_SEARCH_STATE',
+};
+
+export type TranslationGetRandomWordRequestAction = {
+    +type: 'TRANSLATION_GET_RANDOM_WORD_REQUEST',
+};
+
+export type TranslationGetRandomWordSuccessAction = {
+    +type: 'TRANSLATION_GET_RANDOM_WORD_SUCCESS',
+    +payload: string,
+};
+
+export type TranslationGetRandomWordFailureAction = {
+    +type: 'TRANSLATION_GET_RANDOM_WORD_FAILURE',
+    +payload: ErrorObject,
+};
+
+export type TranslationDeleteRandomWordRequestAction = {
+    +type: 'TRANSLATION_DELETE_RANDOM_WORD_REQUEST',
+};
+
+export type TranslationDeleteRandomWordSuccessAction = {
+    +type: 'TRANSLATION_DELETE_RANDOM_WORD_SUCCESS',
+};
+
+export type TranslationDeleteRandomWordFailureAction = {
+    +type: 'TRANSLATION_DELETE_RANDOM_WORD_FAILURE',
+    +payload: ErrorObject,
 };

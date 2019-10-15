@@ -39,6 +39,12 @@ import {
     TRANSLATION_SEARCH_SUCCESS,
     TRANSLATION_SEARCH_FAILURE,
     TRANSLATION_CLEAR_SEARCH_STATE,
+    TRANSLATION_GET_RANDOM_WORD_REQUEST,
+    TRANSLATION_GET_RANDOM_WORD_SUCCESS,
+    TRANSLATION_GET_RANDOM_WORD_FAILURE,
+    TRANSLATION_DELETE_RANDOM_WORD_REQUEST,
+    TRANSLATION_DELETE_RANDOM_WORD_SUCCESS,
+    TRANSLATION_DELETE_RANDOM_WORD_FAILURE,
 } from '../types/actions/translation';
 import type { StoreState } from '../store/type';
 import type {
@@ -280,3 +286,46 @@ export const search = (value: string, from: number, to: number, signal: ?AbortSi
 export const clearSearchState = () => ({
     type: TRANSLATION_CLEAR_SEARCH_STATE,
 });
+
+export const getRandomWord = () => (
+    dispatch: DispatchAPI<*>,
+    getState: () => StoreState
+): Promise<*> => {
+    const apiUrl = routerSelectors.getApiUrl(getState());
+    return actionCreator({
+        dispatch,
+        requestAction: TRANSLATION_GET_RANDOM_WORD_REQUEST,
+        successAction: TRANSLATION_GET_RANDOM_WORD_SUCCESS,
+        failureAction: TRANSLATION_GET_RANDOM_WORD_FAILURE,
+        action: () => request.get({
+            url: `${apiUrl}/random_word`,
+            headers: {
+                Authorization: routerSelectors.getAuthorisation(),
+            },
+            contentType: 'json',
+        }),
+    });
+};
+
+export const deleteRandomWord = (word: string) => (
+    dispatch: DispatchAPI<*>,
+    getState: () => StoreState
+): Promise<*> => {
+    const apiUrl = routerSelectors.getApiUrl(getState());
+    return actionCreator({
+        dispatch,
+        requestAction: TRANSLATION_DELETE_RANDOM_WORD_REQUEST,
+        successAction: TRANSLATION_DELETE_RANDOM_WORD_SUCCESS,
+        failureAction: TRANSLATION_DELETE_RANDOM_WORD_FAILURE,
+        action: () => request.delete({
+            url: `${apiUrl}/random_word`,
+            args: {
+                q: word,
+            },
+            headers: {
+                Authorization: routerSelectors.getAuthorisation(),
+            },
+            contentType: 'json',
+        }),
+    });
+};

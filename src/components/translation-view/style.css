@@ -70,6 +70,10 @@
     justify-content: space-between;
 }
 
+.thf-buttons {
+    position: relative;
+}
+
 .th-image-container {
     position: absolute;
     left: 50%;
@@ -80,7 +84,6 @@
 }
 
 .thic-image-expand-button {
-    margin-left: 2vmax;
     height: 5.8vmax;
 }
 
@@ -111,7 +114,15 @@
     max-width: 35vmax;
 }
 
-.th-save-button-icon {
+.th-delete-button {
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    margin-bottom: 1vmax;
+}
+
+.th-save-button-icon,
+.th-delete-button-icon {
     width: 3vmax;
     height: 3vmax;
 }

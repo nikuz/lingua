@@ -7,7 +7,6 @@ import './style.css';
 
 type Props = {
     text?: string,
-    onClick?: (any) => *,
     className?: string | { [className: string]: * },
     selected?: boolean,
     disabled?: boolean,
@@ -18,6 +17,7 @@ type Props = {
     rightIcon?: string,
     rightIconClassName?: string | { [className: string]: * },
     size?: string,
+    onClick?: (e: MouseEvent) => *,
 };
 
 export default class Button extends React.PureComponent<Props> {
@@ -36,12 +36,6 @@ export default class Button extends React.PureComponent<Props> {
     };
 
     render() {
-        let {
-            text,
-            leftIconClassName,
-            rightIconClassName,
-            className,
-        } = this.props;
         const {
             children,
             type,
@@ -51,6 +45,12 @@ export default class Button extends React.PureComponent<Props> {
             leftIcon,
             rightIcon,
             onClick,
+        } = this.props;
+        let {
+            text,
+            leftIconClassName,
+            rightIconClassName,
+            className,
         } = this.props;
 
         if (children !== undefined) {

@@ -2,7 +2,10 @@
 
 import * as React from 'react';
 import Overlay from '../overlay';
-import Button from '../button';
+import Button, {
+    ButtonRed,
+    ButtonTransparent,
+} from '../button';
 import Icon from '../icon';
 import Loading from '../loading';
 import { translationSelectors } from '../../selectors';
@@ -21,6 +24,7 @@ import './style.css';
 type Props = {
     apiUrl: string,
     translation: TranslationResponse, // eslint-disable-line
+    randomWord: ?string,
     imageLoading: boolean,
     image?: string,
     images: string[],
@@ -31,6 +35,7 @@ type Props = {
     onWordSelect: (data: TranslationSaveRequest) => *,
     selectImage: (image: string) => *,
     toggleImagePickerVisibility: () => *,
+    deleteRandomWord: () => *,
 };
 
 type State = {
@@ -174,6 +179,7 @@ export default class TranslationView extends React.Component<Props, State> {
             images,
             imageError,
             imagePickerOpened,
+            randomWord,
         } = this.props;
         const {
             id,
@@ -242,15 +248,27 @@ export default class TranslationView extends React.Component<Props, State> {
                                 url={`${apiUrl}${pronunciation}`}
                             />
                         ) }
-                        { !isCyrillicWord && !strangeWord && !id && (
-                            <Button
-                                leftIcon="save"
-                                leftIconClassName="th-save-button-icon"
-                                onClick={() => {
-                                    this.selectMainTranslationWord(translationWord);
-                                }}
-                            />
-                        ) }
+                        <div className="thf-buttons">
+                            { randomWord && !strangeWord && (
+                                <ButtonRed
+                                    className="th-delete-button"
+                                    leftIcon="delete"
+                                    leftIconClassName="th-delete-button-icon"
+                                    disabled={imageLoading}
+                                    onClick={this.props.deleteRandomWord}
+                                />
+                            ) }
+                            { !isCyrillicWord && !strangeWord && !id && (
+                                <Button
+                                    leftIcon="save"
+                                    leftIconClassName="th-save-button-icon"
+                                    disabled={imageLoading}
+                                    onClick={() => {
+                                        this.selectMainTranslationWord(translationWord);
+                                    }}
+                                />
+                            ) }
+                        </div>
                     </div>
                     <div className="th-image-container">
                         { imageLoading && <Loading size="small" /> }
@@ -261,10 +279,12 @@ export default class TranslationView extends React.Component<Props, State> {
                             />
                         ) }
                         { image && (
-                            <img
-                                src={image}
-                                className="thic-image"
-                            />
+                            <ButtonTransparent onClick={this.props.toggleImagePickerVisibility}>
+                                <img
+                                    src={image}
+                                    className="thic-image"
+                                />
+                            </ButtonTransparent>
                         ) }
                         { !id && images.length > 1 && (
                             <Button
@@ -291,6 +311,7 @@ export default class TranslationView extends React.Component<Props, State> {
                 />
                 <ImagePicker
                     images={images}
+                    currentImage={image}
                     opened={imagePickerOpened}
                     onClose={this.props.toggleImagePickerVisibility}
                     onSelect={this.selectImage}
