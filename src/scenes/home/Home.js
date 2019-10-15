@@ -157,12 +157,28 @@ export default class Home extends React.Component<Props, State> {
     };
 
     deleteTranslationFromList = () => {
-        const { translationToDelete } = this.props;
+        const {
+            searchList,
+            searchField,
+            translationToDelete,
+        } = this.props;
         const { to } = this.state;
 
         if (translationToDelete) {
             this.props.deleteTranslationFromList(translationToDelete.id).then(() => {
-                this.props.getTranslations(0, to);
+                if (searchField.value.length) {
+                    if (searchList.translations.length === 1) {
+                        this.props.setSearchFieldValue(this.props.searchField.id, '');
+                        this.props.getTranslations(0, to);
+                    } else {
+                        this.searchChange({
+                            id: searchField.id,
+                            value: searchField.value,
+                        });
+                    }
+                } else {
+                    this.props.getTranslations(0, to);
+                }
             });
         }
     };
