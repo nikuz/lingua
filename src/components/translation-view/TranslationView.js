@@ -50,6 +50,7 @@ type State = {
     definitionsSynonyms?: Array<any>,
     examples?: Array<any>,
     pronunciation?: string,
+    autoSpellingFix?: string,
 };
 
 export default class TranslationView extends React.Component<Props, State> {
@@ -73,6 +74,7 @@ export default class TranslationView extends React.Component<Props, State> {
             let definitions;
             let definitionsSynonyms;
             let examples;
+            let autoSpellingFix = null;
 
             if (translation.raw) {
                 const raw = translation.raw;
@@ -86,7 +88,10 @@ export default class TranslationView extends React.Component<Props, State> {
                     translationWord = highestRelevantTranslation[0][0];
                 }
 
-                word = highestRelevantTranslation[0][1];
+                if (word !== highestRelevantTranslation[0][1]) {
+                    autoSpellingFix = word;
+                    word = highestRelevantTranslation[0][1];
+                }
 
                 strangeWord = word.toLowerCase() === translationWord.toLowerCase();
             }
@@ -101,6 +106,7 @@ export default class TranslationView extends React.Component<Props, State> {
                 definitions,
                 definitionsSynonyms,
                 examples,
+                autoSpellingFix,
             };
 
             return newState;
@@ -192,6 +198,7 @@ export default class TranslationView extends React.Component<Props, State> {
             definitions,
             definitionsSynonyms,
             examples,
+            autoSpellingFix,
         } = this.state;
         let image = this.props.image;
 
@@ -295,6 +302,15 @@ export default class TranslationView extends React.Component<Props, State> {
                         ) }
                     </div>
                 </div>
+                { autoSpellingFix && (
+                    <div className="tc-spelling-fix">
+                        Original word
+                        `
+                        <b>{autoSpellingFix}</b>
+                        `
+                        had a spelling mistake
+                    </div>
+                ) }
                 <OtherTranslations
                     word={word}
                     data={otherTranslations}

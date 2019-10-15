@@ -294,3 +294,9 @@
     border-top: none;
     border-radius: 0 0 1vmax 1vmax;
 }
+
+.tc-spelling-fix {
+    padding: 0.5vmax 1vmax;
+    background-color: var(--red-light);
+    color: var(--white);
+}
