@@ -1,12 +1,18 @@
 // @flow
 
 import * as React from 'react';
+import ReactDOM from 'react-dom';
 import classNames from 'classnames';
-import { ButtonBlue } from '../button';
+import {
+    ButtonBlue,
+    ButtonRed,
+} from '../button';
 import Loading from '../loading';
 import './style.css';
 
 type Props = {
+    icon: string,
+    color: string,
     size?: string,
     loading?: boolean,
     className?: string | { [className: string]: * },
@@ -25,10 +31,22 @@ export default class FloatButton extends React.PureComponent<Props> {
     };
 
     render() {
+        const body = document.body;
+        if (!body) {
+            return null;
+        }
+
         const {
+            icon,
             size,
             loading,
+            color,
         } = this.props;
+        let ButtonComponent = ButtonBlue;
+
+        if (color === 'red') {
+            ButtonComponent = ButtonRed;
+        }
 
         const className = classNames(
             'float-button',
@@ -37,24 +55,19 @@ export default class FloatButton extends React.PureComponent<Props> {
             this.props.className
         );
 
-        if (loading) {
-            return (
-                <ButtonBlue
-                    disabled
+        return ReactDOM.createPortal(
+            (
+                <ButtonComponent
+                    onClick={this.clickHandler}
+                    leftIcon={!loading ? icon : ''}
+                    disabled={loading}
+                    leftIconClassName="float-button-icon"
                     className={className}
                 >
-                    <Loading size="small" />
-                </ButtonBlue>
-            );
-        }
-
-        return (
-            <ButtonBlue
-                onClick={this.clickHandler}
-                leftIcon="plus"
-                leftIconClassName="float-button-icon"
-                className={className}
-            />
+                    { loading && <Loading size="small" /> }
+                </ButtonComponent>
+            ),
+            body
         );
     }
 }

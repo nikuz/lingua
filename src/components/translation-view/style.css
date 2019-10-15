@@ -70,10 +70,6 @@
     justify-content: space-between;
 }
 
-.thf-buttons {
-    position: relative;
-}
-
 .th-image-container {
     position: absolute;
     left: 50%;
@@ -115,14 +111,10 @@
 }
 
 .th-delete-button {
-    position: absolute;
-    right: 0;
-    bottom: 100%;
-    margin-bottom: 1vmax;
+    right: 3.4vmax!important;
 }
 
-.th-save-button-icon,
-.th-delete-button-icon {
+.th-save-button-icon {
     width: 3vmax;
     height: 3vmax;
 }

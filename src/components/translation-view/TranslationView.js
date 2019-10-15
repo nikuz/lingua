@@ -2,12 +2,10 @@
 
 import * as React from 'react';
 import Overlay from '../overlay';
-import Button, {
-    ButtonRed,
-    ButtonTransparent,
-} from '../button';
+import Button, { ButtonTransparent } from '../button';
 import Icon from '../icon';
 import Loading from '../loading';
+import FloatButton from '../float-button';
 import { translationSelectors } from '../../selectors';
 import type {
     TranslationResponse,
@@ -30,6 +28,7 @@ type Props = {
     images: string[],
     imagePickerOpened: boolean,
     imageError: ?ErrorObject,
+    randomWordDeleteLoading: boolean,
     getImage: (word: string) => *,
     onClose: () => *,
     onWordSelect: (data: TranslationSaveRequest) => *,
@@ -186,6 +185,7 @@ export default class TranslationView extends React.Component<Props, State> {
             imageError,
             imagePickerOpened,
             randomWord,
+            randomWordDeleteLoading,
         } = this.props;
         const {
             id,
@@ -255,27 +255,16 @@ export default class TranslationView extends React.Component<Props, State> {
                                 url={`${apiUrl}${pronunciation}`}
                             />
                         ) }
-                        <div className="thf-buttons">
-                            { randomWord && !strangeWord && (
-                                <ButtonRed
-                                    className="th-delete-button"
-                                    leftIcon="delete"
-                                    leftIconClassName="th-delete-button-icon"
-                                    disabled={imageLoading}
-                                    onClick={this.props.deleteRandomWord}
-                                />
-                            ) }
-                            { !isCyrillicWord && !strangeWord && !id && (
-                                <Button
-                                    leftIcon="save"
-                                    leftIconClassName="th-save-button-icon"
-                                    disabled={imageLoading}
-                                    onClick={() => {
-                                        this.selectMainTranslationWord(translationWord);
-                                    }}
-                                />
-                            ) }
-                        </div>
+                        { !isCyrillicWord && !strangeWord && !id && (
+                            <Button
+                                leftIcon="save"
+                                leftIconClassName="th-save-button-icon"
+                                disabled={imageLoading}
+                                onClick={() => {
+                                    this.selectMainTranslationWord(translationWord);
+                                }}
+                            />
+                        ) }
                     </div>
                     <div className="th-image-container">
                         { imageLoading && <Loading size="small" /> }
@@ -332,6 +321,15 @@ export default class TranslationView extends React.Component<Props, State> {
                     onClose={this.props.toggleImagePickerVisibility}
                     onSelect={this.selectImage}
                 />
+                { randomWord && !strangeWord && (
+                    <FloatButton
+                        icon="delete"
+                        color="red"
+                        loading={randomWordDeleteLoading}
+                        className="th-delete-button"
+                        onClick={this.props.deleteRandomWord}
+                    />
+                ) }
             </Overlay>
         );
     }

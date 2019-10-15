@@ -110,7 +110,7 @@ export default class TranslationDefinitionsView extends React.Component<Props, S
                     &nbsp;
                     <span>{word}</span>
                 </h2>
-                {data.map((category) => {
+                {data.map((category, key) => {
                     const categoryName = category[0];
                     const definitionsList = category[1];
                     const categoryData = [];
@@ -127,12 +127,12 @@ export default class TranslationDefinitionsView extends React.Component<Props, S
                     }
 
                     return (
-                        <div key={categoryName} className="definitions-category">
+                        <div key={`${categoryName}-${key}`} className="definitions-category">
                             <h3 className="tc-subcategory-title">{categoryName}</h3>
-                            {categoryData.map((item, key) => (
+                            {categoryData.map((item, itemKey) => (
                                 <Item
-                                    key={key}
-                                    id={key + 1}
+                                    key={itemKey}
+                                    id={itemKey + 1}
                                     data={item}
                                     categoryName={categoryName}
                                     synonymsData={synonymsData}

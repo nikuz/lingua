@@ -13,6 +13,7 @@ const mapStateToProps = (state: StoreState) => ({
     imagePickerOpened: state.translation.imagePickerOpened,
     images: state.translation.images,
     imageError: state.translation.imageError,
+    randomWordDeleteLoading: state.translation.randomWordDeleteLoading,
 });
 
 const mapDispatchToProps = ({

@@ -14,6 +14,10 @@
     z-index: 100;
 }
 
+.blurred .search-form {
+    filter: blur(1rem);
+}
+
 .sf-input {
     flex: 1;
 }

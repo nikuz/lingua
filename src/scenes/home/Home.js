@@ -391,10 +391,14 @@ export default class Home extends React.Component<Props, State> {
                         onCancelClick={this.props.translationClearDeleteState}
                     />
                 ) }
-                <FloatButton
-                    loading={randomWordLoading || (!!randomWord && translationGetLoading)}
-                    onClick={this.props.getRandomWord}
-                />
+                { !translation && (
+                    <FloatButton
+                        icon="plus"
+                        color="blue"
+                        loading={randomWordLoading || (!!randomWord && translationGetLoading)}
+                        onClick={this.props.getRandomWord}
+                    />
+                ) }
             </div>
         );
     }
