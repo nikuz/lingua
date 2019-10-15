@@ -5,7 +5,7 @@
     width: 10vmax!important;
     min-height: 10vmax!important;
     color: var(--white);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, .3);
+    box-shadow: 0 0.2vmax 1vmax rgba(0, 0, 0, .3);
     z-index: 100100;
 }
 
