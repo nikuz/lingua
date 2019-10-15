@@ -323,10 +323,9 @@ export default class TranslationView extends React.Component<Props, State> {
                 />
                 { randomWord && !strangeWord && (
                     <FloatButton
-                        icon="delete"
+                        icon="block"
                         color="red"
                         loading={randomWordDeleteLoading}
-                        className="th-delete-button"
                         onClick={this.props.deleteRandomWord}
                     />
                 ) }

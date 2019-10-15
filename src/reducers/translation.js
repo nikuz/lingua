@@ -36,6 +36,7 @@ import {
     TRANSLATION_GET_RANDOM_WORD_REQUEST,
     TRANSLATION_GET_RANDOM_WORD_SUCCESS,
     TRANSLATION_GET_RANDOM_WORD_FAILURE,
+    TRANSLATION_RANDOM_WORD_SET_DELETE_STATE,
     TRANSLATION_DELETE_RANDOM_WORD_REQUEST,
     TRANSLATION_DELETE_RANDOM_WORD_SUCCESS,
     TRANSLATION_DELETE_RANDOM_WORD_FAILURE,
@@ -114,6 +115,7 @@ export type TranslationReducerState = {
     randomWordDeleteLoading: boolean,
     randomWordDeleted: boolean,
     randomWordDeleteError: ?ErrorObject,
+    randomWordToDelete: ?string,
 };
 
 const initialState: TranslationReducerState = {
@@ -157,6 +159,7 @@ const initialState: TranslationReducerState = {
     randomWordDeleteLoading: false,
     randomWordDeleted: false,
     randomWordDeleteError: null,
+    randomWordToDelete: null,
 };
 
 const mergeTranslationsList = (stateList, newList) => {
@@ -431,6 +434,7 @@ export default function translationReducer(
             return {
                 ...state,
                 translationToDelete: null,
+                randomWordToDelete: null,
             };
 
         case TRANSLATION_HIDE_ERRORS:
@@ -518,6 +522,7 @@ export default function translationReducer(
                 ...state,
                 randomWordDeleted: true,
                 randomWordDeleteLoading: false,
+                randomWordToDelete: null,
             };
 
         case TRANSLATION_DELETE_RANDOM_WORD_FAILURE:
@@ -525,6 +530,13 @@ export default function translationReducer(
                 ...state,
                 randomWordDeleteError: action.payload,
                 randomWordDeleteLoading: false,
+                randomWordToDelete: null,
+            };
+
+        case TRANSLATION_RANDOM_WORD_SET_DELETE_STATE:
+            return {
+                ...state,
+                randomWordToDelete: action.payload,
             };
 
         default:

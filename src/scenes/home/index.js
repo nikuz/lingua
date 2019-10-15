@@ -33,6 +33,7 @@ const mapStateToProps = (state: StoreState) => ({
     randomWordDeleteLoading: state.translation.randomWordDeleteLoading,
     randomWordDeleted: state.translation.randomWordDeleted,
     randomWordDeleteError: state.translation.randomWordDeleteError,
+    randomWordToDelete: state.translation.randomWordToDelete,
 });
 
 const mapDispatchToProps = ({
@@ -51,6 +52,7 @@ const mapDispatchToProps = ({
     search: translationActions.search,
     clearSearchState: translationActions.clearSearchState,
     getRandomWord: translationActions.getRandomWord,
+    selectRandomWordToDelete: translationActions.setRandomWordDeleteState,
     deleteRandomWord: translationActions.deleteRandomWord,
 });
 

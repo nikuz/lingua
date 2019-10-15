@@ -47,6 +47,7 @@ type Props = {
     randomWordDeleteLoading: boolean,
     randomWordDeleted: boolean,
     randomWordDeleteError: ?ErrorObject,
+    randomWordToDelete: ?string,
     translationGet: (word: string) => *,
     removePronunciation: (word: string) => *,
     translationSave: (data: TranslationSaveRequest) => *,
@@ -62,6 +63,7 @@ type Props = {
     search: (value: string, from: number, to: number, signal: ?AbortSignal) => *,
     clearSearchState: () => *,
     getRandomWord: () => *,
+    selectRandomWordToDelete: (word: string) => *,
     deleteRandomWord: (word: string) => *,
 };
 
@@ -147,6 +149,13 @@ export default class Home extends React.Component<Props, State> {
         const { randomWord } = this.props;
         if (randomWord) {
             this.props.deleteRandomWord(randomWord);
+        }
+    };
+
+    selectRandomWordToDelete = () => {
+        const { randomWord } = this.props;
+        if (randomWord) {
+            this.props.selectRandomWordToDelete(randomWord);
         }
     };
 
@@ -321,6 +330,7 @@ export default class Home extends React.Component<Props, State> {
             randomWordError,
             randomWordDeleteLoading,
             randomWordDeleteError,
+            randomWordToDelete,
         } = this.props;
         let { translation } = this.props;
         const { selectedTranslation } = this.state;
@@ -363,7 +373,7 @@ export default class Home extends React.Component<Props, State> {
                 <TranslationView
                     translation={translation}
                     randomWord={randomWord}
-                    deleteRandomWord={this.deleteRandomWord}
+                    deleteRandomWord={this.selectRandomWordToDelete}
                     onClose={this.translationClose}
                     onWordSelect={this.translationSave}
                 />
@@ -388,6 +398,15 @@ export default class Home extends React.Component<Props, State> {
                         acceptText="Yes"
                         cancelText="Cancel"
                         onAcceptClick={this.deleteTranslationFromList}
+                        onCancelClick={this.props.translationClearDeleteState}
+                    />
+                ) }
+                { randomWordToDelete && (
+                    <OverlayConfirm
+                        message={`Add "${randomWordToDelete}" random word into block list?`}
+                        acceptText="Yes"
+                        cancelText="Cancel"
+                        onAcceptClick={this.deleteRandomWord}
                         onCancelClick={this.props.translationClearDeleteState}
                     />
                 ) }

@@ -12,3 +12,4 @@ import './broken-image.svg';
 import './delete.svg';
 import './expand.svg';
 import './plus.svg';
+import './block.svg';

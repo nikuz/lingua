@@ -42,6 +42,7 @@ import {
     TRANSLATION_GET_RANDOM_WORD_REQUEST,
     TRANSLATION_GET_RANDOM_WORD_SUCCESS,
     TRANSLATION_GET_RANDOM_WORD_FAILURE,
+    TRANSLATION_RANDOM_WORD_SET_DELETE_STATE,
     TRANSLATION_DELETE_RANDOM_WORD_REQUEST,
     TRANSLATION_DELETE_RANDOM_WORD_SUCCESS,
     TRANSLATION_DELETE_RANDOM_WORD_FAILURE,
@@ -306,6 +307,11 @@ export const getRandomWord = () => (
         }),
     });
 };
+
+export const setRandomWordDeleteState = (word: string) => ({
+    type: TRANSLATION_RANDOM_WORD_SET_DELETE_STATE,
+    payload: word,
+});
 
 export const deleteRandomWord = (word: string) => (
     dispatch: DispatchAPI<*>,
