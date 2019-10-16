@@ -460,6 +460,7 @@ export default function translationReducer(
                 images: [],
                 randomWord: null,
                 randomWordDeleted: false,
+                imageError: null,
             };
 
         case TRANSLATION_SEARCH_REQUEST:
