@@ -70,14 +70,12 @@ type Props = {
 type State = {
     from: number,
     to: number,
-    selectedTranslation: ?Translation,
 };
 
 export default class Home extends React.Component<Props, State> {
     state = {
         from: 0,
         to: TRANSLATIONS_LIST_PAGE_SIZE,
-        selectedTranslation: null,
     };
 
     searchHTTPRequestController: ?AbortController;
@@ -160,9 +158,7 @@ export default class Home extends React.Component<Props, State> {
     };
 
     selectTranslationFromList = (translation: Translation) => {
-        this.setState({
-            selectedTranslation: translation,
-        });
+        this.props.translationGet(translation.word);
     };
 
     deleteTranslationFromList = () => {
@@ -302,14 +298,12 @@ export default class Home extends React.Component<Props, State> {
             this.props.getTranslations(from, to);
         }
         this.props.clearTranslationState();
-        this.setState({
-            selectedTranslation: null,
-        });
     };
 
     render() {
         const {
             searchField,
+            translation,
             translationGetLoading,
             getError,
             translationSaveLoading,
@@ -332,8 +326,6 @@ export default class Home extends React.Component<Props, State> {
             randomWordDeleteError,
             randomWordToDelete,
         } = this.props;
-        let { translation } = this.props;
-        const { selectedTranslation } = this.state;
         const translationManipulateLoading = translationSaveLoading
             || translationUpdateLoading
             || deleteLoading
@@ -349,10 +341,6 @@ export default class Home extends React.Component<Props, State> {
         const isSearchDisabled = !searchField.value.length || translationGetLoading;
         let translationsListData = translationsList.translations;
         let total = translationsList.totalAmount;
-
-        if (!translation && selectedTranslation) {
-            translation = selectedTranslation;
-        }
 
         if (searchField.value.length > 1) {
             translationsListData = searchList.translations;

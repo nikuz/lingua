@@ -13,3 +13,4 @@ import './delete.svg';
 import './expand.svg';
 import './plus.svg';
 import './block.svg';
+import './check.svg';

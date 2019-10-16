@@ -265,6 +265,12 @@ export default class TranslationView extends React.Component<Props, State> {
                                 }}
                             />
                         ) }
+                        { id && (
+                            <ButtonTransparent
+                                leftIcon="check"
+                                leftIconClassName="th-save-button-icon-check"
+                            />
+                        ) }
                     </div>
                     <div className="th-image-container">
                         { imageLoading && <Loading size="small" /> }

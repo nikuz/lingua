@@ -110,9 +110,14 @@
     max-width: 35vmax;
 }
 
-.th-save-button-icon {
+.th-save-button-icon,
+.th-save-button-icon-check {
     width: 3vmax;
     height: 3vmax;
+}
+
+.th-save-button-icon-check {
+    color: var(--green-light-2);
 }
 
 .translation-category-container {
