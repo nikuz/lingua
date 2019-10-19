@@ -277,8 +277,8 @@ export default function translationReducer(
             return {
                 ...state,
                 imageLoading: false,
-                image: action.payload.images[0],
-                images: action.payload.images,
+                image: state.translation ? action.payload.images[0] : null,
+                images: state.translation ? action.payload.images : [],
             };
 
         case TRANSLATION_IMAGE_FAILURE:

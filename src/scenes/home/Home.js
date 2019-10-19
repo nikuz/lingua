@@ -221,13 +221,15 @@ export default class Home extends React.Component<Props, State> {
                         ? this.searchHTTPRequestController.signal
                         : null
                 );
-                this.searchHTTPRequest.then(() => {
-                    this.searchHTTPRequest = null;
-                    this.setState({
-                        from,
-                        to,
+                if (this.searchHTTPRequest instanceof Promise) {
+                    this.searchHTTPRequest.then(() => {
+                        this.searchHTTPRequest = null;
+                        this.setState({
+                            from,
+                            to,
+                        });
                     });
-                });
+                }
             }, 100);
         } else {
             if (searchList.translations.length) {
