@@ -7,7 +7,7 @@ const SHOW_MIN_EXAMPLES = 1;
 
 type Props = {
     word: string,
-    examples?: Array<any>,
+    data?: Array<any>,
 };
 
 type State = {
@@ -29,11 +29,11 @@ export default class TranslationExamplesView extends React.Component<Props, Stat
     render() {
         const {
             word,
-            examples,
+            data,
         } = this.props;
         const { expanded } = this.state;
 
-        if (!examples) {
+        if (!data) {
             return null;
         }
 
@@ -50,7 +50,7 @@ export default class TranslationExamplesView extends React.Component<Props, Stat
                     &nbsp;
                     <span>{word}</span>
                 </h2>
-                {examples.map((category, key) => {
+                {data.map((category, key) => {
                     const categoryData = [];
 
                     examplesCount += category.length;

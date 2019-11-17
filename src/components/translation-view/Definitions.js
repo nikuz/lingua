@@ -14,7 +14,7 @@ type ItemProps = {
 const Item = (props: ItemProps) => {
     const { synonymsData } = props;
     const definition = String(props.data[0]);
-    const synonymsId = Number(props.data[1]);
+    const synonymsId = props.data[1];
     const example = String(props.data[2]);
 
     let synonyms;
@@ -29,7 +29,7 @@ const Item = (props: ItemProps) => {
 
     if (synonymsCategory) {
         synonymsCategory.forEach((synonym) => {
-            if (Number(synonym[1]) === synonymsId) {
+            if (synonym[1] === synonymsId) {
                 synonyms = synonym[0];
             }
         });
