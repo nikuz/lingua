@@ -111,7 +111,7 @@ export default class TranslationsList extends React.Component<Props> {
         if (!data.length) {
             return (
                 <p className="translations-list-empty">
-                  No translations found
+                    No translations found
                 </p>
             );
         }
