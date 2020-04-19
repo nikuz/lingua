@@ -87,7 +87,7 @@ export default class TranslationView extends React.Component<Props, State> {
                     translationWord = highestRelevantTranslation[0][0];
                 }
 
-                if (word !== highestRelevantTranslation[0][1]) {
+                if (word.toLowerCase() !== highestRelevantTranslation[0][1].toLowerCase()) {
                     autoSpellingFix = word;
                     word = highestRelevantTranslation[0][1];
                 }
