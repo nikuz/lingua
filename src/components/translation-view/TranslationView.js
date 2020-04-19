@@ -92,7 +92,8 @@ export default class TranslationView extends React.Component<Props, State> {
                     word = highestRelevantTranslation[0][1];
                 }
 
-                strangeWord = word.toLowerCase() === translationWord.toLowerCase();
+                strangeWord = word.toLowerCase() === translationWord.toLowerCase()
+                    && !otherTranslations;
             }
 
             newState = {
